@@ -25,7 +25,7 @@
       "react-app/jest"
     ]
   },
-  "proxy": "http://volodymyr-lenovo-ideapad-320-15ikb:8080",
+  "proxy": "http://user-MS-7817:8080",
   "browserslist": {
     "production": [
       ">0.2%",

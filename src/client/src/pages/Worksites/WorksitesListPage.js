@@ -1,25 +1,24 @@
 import React, {useState, useEffect} from 'react';
-import {Link} from "react-router-dom";
 import {useHttp} from "../../hooks/http.hook";
+import {Link} from "react-router-dom";
 
-export const ClientListPage = () => {
-//    let history = useHistory();
+export const WorksitesListPage = () => {
+    const {request} = useHttp();
     const [data, setData] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
-    const {request} = useHttp();
+
     const loadMessage = async () => {
         try {
-            const response = await request('/client/list', 'GET')
-            console.log('response', response)
+            const response = await request('/worksites/list', 'GET')
             // message(response.message);
+            console.log('response', response)
             let newArr = [];
             Object.entries(response).forEach((key, index)=> {
                 newArr.push({
                     id: key,
-                    name: `Client ${index+1}`
+                    name: `Worksites ${index+1}`
                 })
                 setIsLoaded(true);
-                console.log('key', key);
             })
             setData(newArr);
             // history.push(`/`);
@@ -33,9 +32,9 @@ export const ClientListPage = () => {
         loadMessage();
     }, [])
 
-    const onRemove = async (id)  => {
+     const onRemove = async (id)  => {
         try {
-            await request('/client/remove', 'DELETE', {id: id});
+            await request('/worksites/remove', 'DELETE', {id: id});
             // message(response.message);
             loadMessage();
         } catch (e) {console.log(e)}
@@ -44,10 +43,11 @@ export const ClientListPage = () => {
     if (!isLoaded) {
         return <div>Загрузка...</div>;
     } else {
+    console.log('data', data)
         return(
             <div>
                 <h1>
-                    Client List Page
+                    Worksites List Page
                 </h1>
                 <div className="row">
                     {data.map(item => {
@@ -58,19 +58,16 @@ export const ClientListPage = () => {
                                     <span className="card-title">{item.name}</span>
                                     <ul>
                                         <li>Name:{item.id[1].name}</li>
-                                        <li>Primary office address: {item.id[1].address}</li>
-                                        <li>Contact phone: {item.id[1].phone}</li>
-                                        <li>Contact person: {item.id[1].contactPerson}</li>
-                                        <li>Corporate or personal: {item.id[1].client}</li>
-                                        <li>Status: {item.id[1].status}</li>
+                                        <li>Address: {item.id[1].address}</li>
+                                        <li>Type: {item.id[1].type}</li>
+                                        <li>Status2: {item.id[1].status}</li>
                                     </ul>
                                 </div>
                                 <div className="card-action">
-                                    <Link to={`/client/${item.id[1]._id}/edit`}>Edit</Link>
+                                    <Link to={`/worksites/${item.id[1]._id}/edit`}>Edit</Link>
                                     <button
                                         className="btn btn-primary"
                                         onClick={() => onRemove(item.id[1]._id)}
-                                        value={item.id[1]._id}
                                     >
                                         Delete
                                     </button>

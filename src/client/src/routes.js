@@ -13,6 +13,9 @@ import {CourseEditPage} from "./pages/CourseEditPage";
 import {ClientAddPage} from "./pages/Client/ClientAddPage";
 import {ClientListPage} from "./pages/Client/ClientListPage";
 import {ClientEditPage} from "./pages/Client/ClientEditPage";
+import {WorksitesAddPage} from "./pages/Worksites/WorksitesAddPage";
+import {WorksitesListPage} from "./pages/Worksites/WorksitesListPage";
+import {WorksitesEditPage} from "./pages/Worksites/WorksitesEditPage";
 
 export const useRoutes = isAuthenticated => {
     if (isAuthenticated) {
@@ -60,6 +63,15 @@ export const useRoutes = isAuthenticated => {
             </Route>
             <Route path="/client/:id/edit">
                 <ClientEditPage />
+            </Route>
+            <Route path="/worksites" exact>
+                <WorksitesAddPage />
+            </Route>
+            <Route path="/worksites/list" exact>
+                <WorksitesListPage />
+            </Route>
+            <Route path="/worksites/:id/edit">
+                <WorksitesEditPage />
             </Route>
             <Route path="/courses" exact>
                 <CoursesPage />

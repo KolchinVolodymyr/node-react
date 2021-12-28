@@ -24,6 +24,17 @@ const clientSchema = new Schema({
     status: {
         type: String,
         required: true
+    },
+    worksites: {
+        items: [
+            {
+                WorksitesId: {
+                    type: Schema.Types.ObjectId,
+                    ref: 'Worksites',
+                    required: true
+                }
+            }
+        ]
     }
 
 })
