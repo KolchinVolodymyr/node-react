@@ -36,7 +36,6 @@ export const WorksitesEditPage = () => {
             setData(response);
             history.push(`/worksites/list`);
         } catch (e) {console.log(e)}
-
     }
 console.log('data.clientID', data.clientID)
     return(
@@ -119,7 +118,6 @@ console.log('data.clientID', data.clientID)
                         )
                     })}
                 </select>
-
             </div>
         </div>
     )
