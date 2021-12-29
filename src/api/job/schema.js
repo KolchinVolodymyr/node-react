@@ -13,10 +13,10 @@ const jobSchema = new Schema({
         type: String,
         required: true
     },
-//    employee: {
-//        type: String,
-//        required: true
-//    },
+    employee: {
+       type: Object,
+       required: true
+    },
     serviceFee: {
         type: Number,
         required: true
