@@ -61,7 +61,7 @@ export const EmployeesEditPage = () => {
                     </div>
                     <div className="input-field">
                         <input
-                            type="text"
+                            type="number"
                             name="phone"
                             value={data.phone}
                             onChange={changeHandler}
@@ -70,7 +70,7 @@ export const EmployeesEditPage = () => {
                     <div>
                         Date of birth:
                         <input
-                            type="text"
+                            type="date"
                             name="date_of_birth"
                             value={data.date_of_birth}
                             onChange={changeHandler}
@@ -79,7 +79,7 @@ export const EmployeesEditPage = () => {
                     <div>
                         Salary:
                         <input
-                            type="text"
+                            type="number"
                             name="salary"
                             value={data.salary}
                             onChange={changeHandler}

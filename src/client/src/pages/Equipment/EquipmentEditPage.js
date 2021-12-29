@@ -25,7 +25,8 @@ export const EquipmentEditPage = () => {
         try {
             const response = await request(`/equipment/${ID}/edit`, 'PUT', {...data, id: ID});
             // message(response.message);
-            setData(response);
+            // setData(response);
+            console.log('response', response);
             history.push(`/equipment/list`);
         } catch (e) {console.log(e)}
     }
@@ -52,7 +53,7 @@ export const EquipmentEditPage = () => {
                     </div>
                     <div className="input-field">
                         <input
-                            name="address"
+                            name="storageLocation"
                             type="text"
                             className="validate"
                             value={data.storageLocation}
@@ -61,8 +62,8 @@ export const EquipmentEditPage = () => {
                     </div>
                     <div className="input-field">
                         <input
-                            type="text"
-                            name="phone"
+                            type="number"
+                            name="usageFee"
                             value={data.usageFee}
                             onChange={changeHandler}
                         />
