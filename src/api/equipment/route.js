@@ -1,9 +1,8 @@
 'use strict';
 
-const MODEL_NAME = 'job';
-const Job = require('./schema');
+const MODEL_NAME = 'equipment';
+const Equipment = require('./schema');
 const Joi = require("@hapi/joi");
-const Worksites = require('../worksites/schema');
 
 module.exports = [
     {
@@ -16,8 +15,8 @@ module.exports = [
             }
         },
         handler: async function (request, h) {
-            const job = await Job.find();
-            return h.response({job}).code(200).takeover();
+            const equipment = await Equipment.find();
+            return h.response({equipment}).code(200).takeover();
         }
     },
     {
@@ -31,10 +30,11 @@ module.exports = [
         },
         handler: async function (request, h) {
             try {
-                const job = await Job.findById(request.params.id);
+                const equipment = await Equipment.findById(request.params.id);
+                // console.log('equipment', equipment);
                 // const worksite = await Worksites.findById(job.worksiteID);
-                const worksitesList = await Worksites.find();
-                return h.response({job, worksitesList}).code(200).takeover();
+                // const worksitesList = await Worksites.find();
+                return h.response({equipment}).code(200).takeover();
             } catch (e) {
                 console.log(e);
             }
@@ -64,16 +64,14 @@ module.exports = [
 //            },
         },
         handler: async function (request, h) {
-            const job = new Job({
-                worksiteID: request.payload.worksiteID,
-                type: request.payload.type,
-                hazardousMaterials: request.payload.hazardousMaterials,
-                serviceFee: request.payload.serviceFee,
-                startDate: request.payload.startDate,
-                endDate: request.payload.endDate,
+            const equipment = new Equipment({
+                name: request.payload.name,
+                storageLocation: request.payload.storageLocation,
+                usageFee: request.payload.usageFee,
+                status: request.payload.status,
             });
-            job.save();
-            if (!job) {
+            equipment.save();
+            if (!equipment) {
                 return h.response({message: 'An error occured, please try again later!'})
             }
             return h.response({message: 'Course successfully created !!!'}).code(201).takeover();
@@ -104,7 +102,7 @@ module.exports = [
         },
         handler: async function (request, h) {
             try {
-                await Job.findByIdAndUpdate(request.payload.id, request.payload);
+                await Equipment.findByIdAndUpdate(request.payload.id, request.payload);
                 return h.response({message: 'Data changed successfully!'}).code(200).takeover();
             } catch (e){
                 console.log(e);
@@ -122,7 +120,7 @@ module.exports = [
         },
         handler: async function (request, h) {
             try {
-                await Job.deleteOne({_id: request.payload.id});
+                await Equipment.deleteOne({_id: request.payload.id});
                 return h.response({message: 'Job deleted!'});
             } catch (e){
                 console.log(e);

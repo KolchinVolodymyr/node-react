@@ -9,13 +9,14 @@ export const JobEditPage = () => {
     const [data, setData] = useState({
         worksiteID: '', type: '', serviceFee: '', hazardousMaterials: '', startDate: '', endDate: ''
     });
-//    const [clients, setClients] = useState([]);
+   const [worksites, setWorksites] = useState([]);
 
     const fetchClient = useCallback(async () => {
         try {
             const response = await request(`/job/${ID}/edit`, 'GET');
-            setData(response);
-            console.log('response', response);
+            setData(response.job);
+            setWorksites(response.worksitesList);
+            console.log('response.worksiteName', response.worksiteName);
             // history.push(`/`);
         } catch (e) {console.log(e)}
     }, [ID, request]);
@@ -33,7 +34,7 @@ export const JobEditPage = () => {
             const response = await request(`/job/${ID}/edit`, 'PUT', {...data, id: ID});
             // message(response.message);
             setData(response);
-            history.push(`/worksites/list`);
+            history.push(`/job/list`);
         } catch (e) {console.log(e)}
 
     }
@@ -47,35 +48,32 @@ export const JobEditPage = () => {
                 <div>
                     <div className="input-field">
                          Worksite:
-                         <select
-                             className="browser-default"
-                             value={data.worksiteID}
-                             name="worksiteID"
-                             onChange={changeHandler}
-                         >
-                             <option value='Choose your option' disabled>Choose your option</option>
-                             <option value={data.worksiteID}>{data.worksiteID}</option>
-                             <option value='residential building'>residential building</option>
-                             <option value='personal home'>personal home</option>
-                             <option value='individual apartment'>individual apartment</option>
-                             <option value='manufacturing'>manufacturing</option>
-                             <option value='warehouse'>warehouse</option>
-                             <option value='outdoor'>outdoor</option>
-                             <option value='field'>field</option>
-                             <option value='other'>other</option>
-                         </select>
+                        <select
+                            className="browser-default"
+                            value={data.worksiteID || 'Choose your option'}
+                            name="worksiteID"
+                            onChange={changeHandler}
+                        >
+                        <option value='Choose your option' disabled>Choose your option</option>
+                        {worksites.map(el => {
+                            return (
+                                <option key={el._id} value={el._id}>{el.name}</option>
+                            )
+                        })}
+                        </select>
                     </div>
                     <div className="input-field">
                         Type:
                         <select
                             className="browser-default"
-                            value={data.type}
+                            value={data.type || 'Choose your option'}
                             name="type"
                             onChange={changeHandler}
                         >
                             <option value='Choose your option' disabled>Choose your option</option>
-                            <option value={data.type}>{data.type}</option>
                             <option value='home cleaning'>home cleaning</option>
+                            <option value='office cleaning'>office cleaning</option>
+                            <option value='industrial area cleaning'>industrial area cleaning</option>
                             <option value='deep cleaning'>deep cleaning</option>
                             <option value='outdoor cleaning'>outdoor cleaning</option>
                         </select>
@@ -94,7 +92,7 @@ export const JobEditPage = () => {
                         </select>
                     </div>
                     <div className="input-field">
-                        <label>
+
                         Service fee:
                             <input
                                 type="number"
@@ -102,7 +100,6 @@ export const JobEditPage = () => {
                                 defaultValue={data.serviceFee}
                                 onChange={changeHandler}
                             />
-                        </label>
                     </div>
                          <label>
                             Start date:

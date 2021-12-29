@@ -1,22 +1,22 @@
 import React, {useState, useEffect} from 'react';
-import {useHttp} from "../../hooks/http.hook";
 import {Link} from "react-router-dom";
+import {useHttp} from "../../hooks/http.hook";
 
-export const JobListPage = () => {
+export const EquipmentListPage = () => {
     const {request} = useHttp();
     const [data, setData] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
     const loadMessage = async () => {
         try {
-            const response = await request('/job/list', 'GET')
+            const response = await request('/equipment/list', 'GET')
             // message(response.message);
-            // console.log('response', response)
+            console.log('response', response)
             let newArr = [];
-            Object.entries(response.job).forEach((key, index)=> {
+            Object.entries(response.equipment).forEach((key, index)=> {
                 newArr.push({
                     id: key,
-                    name: `Job ${index+1}`
+                    name: `Equipment ${index+1}`
                 })
                 setIsLoaded(true);
             })
@@ -32,9 +32,9 @@ export const JobListPage = () => {
         loadMessage();
     }, [])
 
-     const onRemove = async (id)  => {
+    const onRemove = async (id)  => {
         try {
-            await request('/job/remove', 'DELETE', {id: id});
+            await request('/equipment/remove', 'DELETE', {id: id});
             // message(response.message);
             loadMessage();
         } catch (e) {console.log(e)}
@@ -46,7 +46,7 @@ export const JobListPage = () => {
         return(
             <div>
                 <h1>
-                    Job List Page
+                    Equipment List Page
                 </h1>
                 <div className="row">
                     {data.map(item => {
@@ -56,16 +56,14 @@ export const JobListPage = () => {
                                 <div className="card-content white-text">
                                     <span className="card-title">{item.name}</span>
                                     <ul>
-                                        <li>WorksiteID:{item.id[1].worksiteID}</li>
-                                        <li>Type: {item.id[1].type}</li>
-                                        <li>Hazardous materials: {item.id[1].hazardousMaterials}</li>
-                                        <li>Service Fee: {item.id[1].serviceFee}</li>
-                                        <li>Start date: {item.id[1].startDate}</li>
-                                        <li>End date: {item.id[1].endDate}</li>
+                                        <li>Name:{item.id[1].name}</li>
+                                        <li>Storage location: {item.id[1].storageLocation}</li>
+                                        <li>Usage fee: {item.id[1].usageFee}</li>
+                                        <li>Status: {item.id[1].status}</li>
                                     </ul>
                                 </div>
                                 <div className="card-action">
-                                    <Link to={`/job/${item.id[1]._id}/edit`}>Edit</Link>
+                                    <Link to={`/equipment/${item.id[1]._id}/edit`}>Edit</Link>
                                     <button
                                         className="btn btn-primary"
                                         onClick={() => onRemove(item.id[1]._id)}

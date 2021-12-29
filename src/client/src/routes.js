@@ -19,6 +19,12 @@ import {WorksitesEditPage} from "./pages/Worksites/WorksitesEditPage";
 import {JobAddPage} from "./pages/Job/JobAddPage";
 import {JobListPage} from "./pages/Job/JobListPage";
 import {JobEditPage} from "./pages/Job/JobEditPage";
+import {EmployeesAddPage} from "./pages/Employees/EmployeesAddPage";
+import {EmployeesListPage} from "./pages/Employees/EmployeesListPage";
+import {EmployeesEditPage} from "./pages/Employees/EmployeesEditPage";
+import {EquipmentAddPage} from "./pages/Equipment/EquipmentAddPage";
+import {EquipmentListPage} from "./pages/Equipment/EquipmentListPage";
+import {EquipmentEditPage} from "./pages/Equipment/EquipmentEditPage";
 
 export const useRoutes = isAuthenticated => {
     if (isAuthenticated) {
@@ -84,6 +90,24 @@ export const useRoutes = isAuthenticated => {
             </Route>
             <Route path="/job/:id/edit" exact>
                 <JobEditPage />
+            </Route>
+            <Route path="/employees" exact>
+                <EmployeesAddPage />
+            </Route>
+            <Route path="/employees/list" exact>
+                <EmployeesListPage />
+            </Route>
+            <Route path="/employees/:id/edit">
+                <EmployeesEditPage />
+            </Route>
+            <Route path="/equipment" exact>
+                <EquipmentAddPage />
+            </Route>
+            <Route path="/equipment/list" exact>
+                <EquipmentListPage />
+            </Route>
+            <Route path="/equipment/:id/edit">
+                <EquipmentEditPage />
             </Route>
             <Route path="/courses" exact>
                 <CoursesPage />

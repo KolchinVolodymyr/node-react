@@ -1,18 +1,18 @@
 import React, {useState} from 'react';
 import {useHttp} from "../../hooks/http.hook";
 
-export const WorksitesAddPage = () => {
+export const EquipmentAddPage = () => {
     const {request} = useHttp();
     const [data, setData] = useState({
-        name: '', address: '', type: '', status: '', worksitesClient: ''
+        name: '', storageLocation: '', usageFee: '', status: ''
     });
 
     const handleSubmitCreate = async () => {
         try {
-            const response = await request('/worksites', 'POST', {...data})
+            const response = await request('/equipment', 'POST', {...data})
             // message(response.message);
             console.log('response', response);
-            console.log('response.message', response.message);
+            // console.log('response.message', response.message);
             // history.push(`/`);
         } catch (e) {console.log(e)}
     };
@@ -24,7 +24,7 @@ export const WorksitesAddPage = () => {
     return(
         <div>
             <h1>
-                Worksites Page
+                Equipment Page
             </h1>
             <form>
                 <label>
@@ -36,31 +36,21 @@ export const WorksitesAddPage = () => {
                     />
                 </label>
                 <label>
-                    Address:
+                    Storage location:
                     <input
                         type="text"
-                        name="address"
+                        name="storageLocation"
                         onChange={changeHandler}
                     />
                 </label>
-                <label>Choose your option</label>
-                <select
-                    className="browser-default"
-                    defaultValue='Choose your option'
-                    name="type"
-                    onChange={changeHandler}
-                >
-                    <option value='Choose your option' disabled>Choose your option</option>
-                    <option value='office'>office</option>
-                    <option value='residential building'>residential building</option>
-                    <option value='personal home'>personal home</option>
-                    <option value='individual apartment'>individual apartment</option>
-                    <option value='manufacturing'>manufacturing</option>
-                    <option value='warehouse'>warehouse</option>
-                    <option value='outdoor'>outdoor</option>
-                    <option value='field'>field</option>
-                    <option value='other'>other</option>
-                </select>
+                <label>
+                    Usage Fee:
+                    <input
+                        type="text"
+                        name="usageFee"
+                        onChange={changeHandler}
+                    />
+                </label>
                 <label>Status</label>
                 <select
                     className="browser-default"

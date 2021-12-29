@@ -37,7 +37,7 @@ export const WorksitesEditPage = () => {
             history.push(`/worksites/list`);
         } catch (e) {console.log(e)}
     }
-console.log('data.clientID', data.clientID)
+
     return(
         <div>
             <h1>
