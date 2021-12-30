@@ -1,6 +1,4 @@
 import React, {useState} from 'react';
-// import axios from 'axios';
-// import {Button} from './../../components/Button';
 import {useHttp} from "../../hooks/http.hook";
 
 export const ClientAddPage = () => {
@@ -8,46 +6,22 @@ export const ClientAddPage = () => {
     const [data, setData] = useState({
         name: '', address: '', phone: '', contactPerson: '', client: '', status: ''
     });
-     // const [client, setClient] = useState([]);
-
 
     const handleSubmitCreate = async () => {
-        // axios.post('https://cleanertrackpro-c446c-default-rtdb.europe-west1.firebasedatabase.app/Test.json', data)
-        //     .then((response)=>{
-        //         console.log(response);
-        //     })
-        //     .catch(error => {
-        //         console.log('error', error);
-        //     })
-        // event.preventDefault();
-        //
         try {
             const response = await request('/client', 'POST', {...data})
             // message(response.message);
+            setData(response);
             console.log('response.message', response.message);
             // history.push(`/`);
         } catch (e) {console.log(e)}
     };
 
-    // const handleSubmitReadList = event => {
-    //     // axios.get('https://cleanertrackpro-c446c-default-rtdb.europe-west1.firebasedatabase.app/Test.json')
-    //     //  .then((response)=>{
-    //     //     Object.keys(response.data).forEach((key, index)=> {
-    //     //         client.push({
-    //     //             id: key,
-    //     //             name: `Client ${index+1}`
-    //     //         })
-    //     //         setClient({client});
-    //     //     })
-    //     //  })
-    //     //  .catch(error => {
-    //     //     console.log('error', error);
-    //     //  })
-    // }
-
-
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
+    }
+    const changeHandlerChecked = (event) => {
+        setData({...data, [event.target.name]: event.target.checked});
     }
 
     return(
@@ -100,16 +74,18 @@ export const ClientAddPage = () => {
                     <option value='Personal'>Personal</option>
                 </select>
                 <label>Status</label>
-                <select
-                    className="browser-default"
-                    defaultValue='Choose your option'
-                    name="status"
-                    onChange={changeHandler}
-                >
-                    <option value='Choose your option' disabled>Choose your option</option>
-                    <option value='true'>true</option>
-                    <option value='false'>false</option>
-                </select>
+                <p>
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="status"
+                            className="filled-in"
+                            checked={data.status}
+                            onChange={changeHandlerChecked}
+                        />
+                        <span>Status</span>
+                    </label>
+                </p>
                 <button onClick={handleSubmitCreate} type="primary">Create</button>
             </form>
         </div>

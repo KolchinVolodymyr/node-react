@@ -44,11 +44,11 @@ export const Navbar = () => {
                     </a>
                     <ul id="nav-mobile" className="right hide-on-med-and-down">
                         <li><NavLink to="/">Home</NavLink></li>
-                        <li><NavLink to="/client">Client</NavLink></li>
-                        <li><NavLink to="/worksites">Worksites</NavLink></li>
-                        <li><NavLink to="/job">Job</NavLink></li>
-                        <li><NavLink to="/employees">Employees</NavLink></li>
-                        <li><NavLink to="/equipment">Equipment</NavLink></li>
+                        <li><NavLink to="/client/list">Client</NavLink></li>
+                        <li><NavLink to="/worksites/list">Worksites</NavLink></li>
+                        <li><NavLink to="/job/list">Job</NavLink></li>
+                        <li><NavLink to="/employees/list">Employees</NavLink></li>
+                        <li><NavLink to="/equipment/list">Equipment</NavLink></li>
                         <li><NavLink to="/courses">Courses</NavLink></li>
                         <li><a href="/login">Log in</a></li>
                     </ul>

@@ -26,6 +26,10 @@ export const ClientEditPage = () => {
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
     }
+    const changeHandlerChecked = (event) => {
+        setData({...data, [event.target.name] : event.target.checked });
+        console.log('data', data)
+    }
 
     const PressHandler = async ()  => {
         try {
@@ -93,19 +97,18 @@ export const ClientEditPage = () => {
                             <option value='Personal'>Personal</option>
                         </select>
                     </div>
-                    <div>
-                        <label>Status</label>
-                        <select
-                            className="browser-default"
-                            defaultValue={data.status || ""}
-                            name="status"
-                            onChange={changeHandler}
-                        >
-                            <option value='Choose your option' disabled>Choose your option</option>
-                            <option value='true'>true</option>
-                            <option value='false'>false</option>
-                        </select>
-                    </div>
+                    <p>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="status"
+                                className="filled-in"
+                                checked={data.status}
+                                onChange={changeHandlerChecked}
+                            />
+                            <span>Status</span>
+                        </label>
+                    </p>
                     <button
                         className="btn btn-primary"
                         onClick={PressHandler}

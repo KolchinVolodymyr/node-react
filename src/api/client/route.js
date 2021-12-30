@@ -46,22 +46,23 @@ module.exports = [
                 mode: 'try',
                 strategy: 'session60'
             },
-            validate: {
-                payload: Joi.object({
-                    name: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
-                    address: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
-                    phone: Joi.number().integer().required().error(new Error('Enter the correct phone')),
-                    contactPerson: Joi.number().integer().required().error(new Error('Enter the correct Contact Person'))
-                }),
-                options: {
-                    allowUnknown: true,
-                },
-                failAction: (request, h, err) => {
-                    return h.response({message: err.output.payload.message}).code(400).takeover();
-                }
-            },
+            // validate: {
+            //     payload: Joi.object({
+            //         name: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
+            //         address: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
+            //         phone: Joi.number().integer().required().error(new Error('Enter the correct phone')),
+            //         contactPerson: Joi.number().integer().required().error(new Error('Enter the correct Contact Person'))
+            //     }),
+            //     options: {
+            //         allowUnknown: true,
+            //     },
+            //     failAction: (request, h, err) => {
+            //         return h.response({message: err.output.payload.message}).code(400).takeover();
+            //     }
+            // },
         },
         handler: async function (request, h) {
+            console.log('request.payload', request.payload);
             const client = new Client({
                 name: request.payload.name,
                 address: request.payload.address,
