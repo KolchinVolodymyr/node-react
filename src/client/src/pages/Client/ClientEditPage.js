@@ -14,7 +14,8 @@ export const ClientEditPage = () => {
         try {
             const response = await request(`/client/${ID}/edit`, 'GET')
             // message(response.message);
-            setData(response);
+            setData(response.client);
+            console.log('res', response)
             // history.push(`/`);
         } catch (e) {console.log(e)}
     }, [ID, request]);
@@ -28,7 +29,7 @@ export const ClientEditPage = () => {
     }
     const changeHandlerChecked = (event) => {
         setData({...data, [event.target.name] : event.target.checked });
-        console.log('data', data)
+        console.log('data', data);
     }
 
     const PressHandler = async ()  => {

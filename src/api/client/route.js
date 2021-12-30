@@ -32,7 +32,8 @@ module.exports = [
         handler: async function (request, h) {
             try {
                 const client = await Client.findById(request.params.id);
-                return h.response(client).code(200).takeover();
+                console.log('client', client);
+                return h.response({client}).code(200).takeover();
             } catch (e) {
                 console.log(e);
             }
@@ -62,7 +63,6 @@ module.exports = [
             // },
         },
         handler: async function (request, h) {
-            console.log('request.payload', request.payload);
             const client = new Client({
                 name: request.payload.name,
                 address: request.payload.address,

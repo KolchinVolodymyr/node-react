@@ -9,6 +9,7 @@ export const WorksitesEditPage = () => {
     const [data, setData] = useState({
         name: '', address: '', phone: '', contactPerson: '', clientID: '', status: ''
     });
+    const [currentClientID, setCurrentClientID] = useState(null);
     const [clients, setClients] = useState([]);
 
     const fetchClient = useCallback(async () => {
@@ -16,7 +17,7 @@ export const WorksitesEditPage = () => {
             const response = await request(`/worksites/${ID}/edit`, 'GET');
             setData(response.worksites);
             setClients(response.clientList);
-
+            setCurrentClientID(response.worksites.clientID);
             // history.push(`/`);
         } catch (e) {console.log(e)}
     }, [ID, request]);
@@ -31,7 +32,7 @@ export const WorksitesEditPage = () => {
 
     const PressHandler = async ()  => {
         try {
-            const response = await request(`/worksites/${ID}/edit`, 'PUT', {...data, id: ID});
+            const response = await request(`/worksites/${ID}/edit`, 'PUT', {...data, id: ID, currentClientID: currentClientID});
             // message(response.message);
             setData(response);
             history.push(`/worksites/list`);
