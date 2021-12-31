@@ -62,7 +62,7 @@ export const ClientListPage = () => {
                                         <li>Contact phone: {item.id[1].phone}</li>
                                         <li>Contact person: {item.id[1].contactPerson}</li>
                                         <li>Corporate or personal: {item.id[1].client}</li>
-                                        <li>Status: {item.id[1].status}</li>
+                                        <li>Status: {item.id[1].status.toString()}</li>
                                     </ul>
                                 </div>
                                 <div className="card-action">
