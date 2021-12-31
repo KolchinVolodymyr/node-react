@@ -38,7 +38,7 @@ export const ClientEditPage = () => {
         setData({...data, [event.target.name]: event.target.value});
     }
     const changeHandlerChecked = (event) => {
-        if(event.target.checked === false) {
+        if(event.target.checked === true) {
             // console.log('status', data.status);
             setData({...data, [event.target.name] : event.target.checked });
         } else {
