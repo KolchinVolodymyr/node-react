@@ -10,7 +10,7 @@ export const ClientListPage = () => {
     const loadMessage = async () => {
         try {
             const response = await request('/client/list', 'GET')
-            console.log('response', response)
+            // console.log('response', response)
             // message(response.message);
             let newArr = [];
             Object.entries(response).forEach((key, index)=> {
@@ -19,7 +19,6 @@ export const ClientListPage = () => {
                     name: `Client ${index+1}`
                 })
                 setIsLoaded(true);
-                console.log('key', key);
             })
             setData(newArr);
             // history.push(`/`);

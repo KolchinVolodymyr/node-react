@@ -3,7 +3,7 @@
 const MODEL_NAME = 'client';
 const Client = require('./schema');
 const Joi = require("@hapi/joi");
-const Course = require("../add-course/schema");
+const Worksites = require('../worksites/schema')
 
 module.exports = [
     {
@@ -32,8 +32,14 @@ module.exports = [
         handler: async function (request, h) {
             try {
                 const client = await Client.findById(request.params.id);
-                console.log('client', client);
-                return h.response({client}).code(200).takeover();
+                // console.log('client', client.worksites.items);
+                const clientWorksitesItem = [];
+                const promises = client.worksites.items.map(async (el) => {
+                    const worksites = await Worksites.findById(el.WorksitesId);
+                    clientWorksitesItem.push(worksites);
+                })
+                await Promise.all(promises);
+                return h.response({client, clientWorksitesItem}).code(200).takeover();
             } catch (e) {
                 console.log(e);
             }

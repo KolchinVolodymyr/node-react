@@ -9,13 +9,23 @@ export const ClientEditPage = () => {
     const [data, setData] = useState({
         name: '', address: '', phone: '', contactPerson: '', client: '', status: ''
     });
+    const [count, setCount] = useState(0);
 
     const fetchClient = useCallback(async () => {
         try {
             const response = await request(`/client/${ID}/edit`, 'GET')
             // message(response.message);
             setData(response.client);
-            console.log('res', response)
+
+            const promises = response.clientWorksitesItem.map(async(el) => {
+                if(el.status == 'true') {
+                    setCount(count+1)
+                    console.log('setCount forEach-1', count);
+                }
+                console.log('setCount forEach', count);
+            })
+            await Promise.all(promises);
+
             // history.push(`/`);
         } catch (e) {console.log(e)}
     }, [ID, request]);
@@ -28,8 +38,17 @@ export const ClientEditPage = () => {
         setData({...data, [event.target.name]: event.target.value});
     }
     const changeHandlerChecked = (event) => {
-        setData({...data, [event.target.name] : event.target.checked });
-        console.log('data', data);
+        if(event.target.checked === false) {
+            // console.log('status', data.status);
+            setData({...data, [event.target.name] : event.target.checked });
+        } else {
+            if(count === 0){
+                setData({...data, [event.target.name] : event.target.checked });
+            } else {
+                console.log('message error');
+            }
+        }
+
     }
 
     const PressHandler = async ()  => {
@@ -104,7 +123,7 @@ export const ClientEditPage = () => {
                                 type="checkbox"
                                 name="status"
                                 className="filled-in"
-                                checked={data.status}
+                                checked={data.status || ''}
                                 onChange={changeHandlerChecked}
                             />
                             <span>Status</span>
