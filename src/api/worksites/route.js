@@ -3,6 +3,8 @@
 const MODEL_NAME = 'worksites';
 const Worksites = require('./schema');
 const Client = require('../client/schema');
+const User = require("../profile/schema");
+const Order = require("../order/schema");
 
 module.exports = [
     {
@@ -86,19 +88,36 @@ module.exports = [
             try {
                 await Worksites.findByIdAndUpdate(request.payload.id, request.payload);
                 const worksites = await Worksites.findById(request.params.id);
-                // console.log('request.payload', request.payload);
                 const client = await Client.findById(worksites.clientID);
-                console.log('client', client);
-                // console.log('clientID', request.payload.clientID);
-                // console.log('currentClientID', request.payload.currentClientID);
+
                 const currentClient = await Client.findById(request.payload.currentClientID);
                 if(currentClient !== null) {
                     await currentClient.deleteWorksites(worksites)
                 }
-                console.log('currentClient', currentClient);
+
                 if(client !== null) {
                     await client.addToWorksites(worksites);
                 }
+                /**/
+                // request.user = await User.findById(request.auth.credentials._id);
+                // const user = await request.user.populate('cart.items.courseId').execPopulate();
+                //
+                // const courses = user.cart.items.map(i=>({
+                //     count: i.count,
+                //     course: {...i.courseId._doc}
+                // }))
+                //
+                // const order = new Order({
+                //     user: {
+                //         name: request.user.name,
+                //         userId: request.user
+                //     },
+                //     courses: courses
+                // })
+                // await order.save();
+                // await request.user.clearCart();
+                // return h.response({message: 'Your order has been successfully completed!'})
+                /**/
                 return h.response({message: 'Data changed successfully!'}).code(200).takeover();
             } catch (e){
                 console.log(e);

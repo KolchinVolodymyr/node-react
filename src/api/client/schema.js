@@ -1,4 +1,5 @@
 const {Schema, model} = require('mongoose');
+const {string} = require("joi");
 
 const clientSchema = new Schema({
     name: {
@@ -32,6 +33,9 @@ const clientSchema = new Schema({
                     type: Schema.Types.ObjectId,
                     ref: 'Worksites',
                     required: true
+                },
+                WorksitesItem: {
+                    type: Object
                 }
             }
         ]
@@ -48,6 +52,7 @@ clientSchema.methods.addToWorksites = function(Worksites) {
     } else {
         items.push({
             WorksitesId: Worksites._id,
+            WorksitesItem: Worksites
         })
     }
 
@@ -56,17 +61,12 @@ clientSchema.methods.addToWorksites = function(Worksites) {
 }
 clientSchema.methods.deleteWorksites = function(Worksites) {
     const items = [...this.worksites.items];
-    const idx = items.findIndex(c => c.WorksitesId.toString() === Worksites.toString());
-   console.log('idx', idx);
-    // items.filter(c => c.WorksitesId.toString() !== Worksites.toString());
-    console.log('items',items);
-    if (items[idx] !== -1) {
-        items = items.filter(c => c.WorksitesId.toString() !== Worksites.toString());
-    } else {
-        items[idx].count--;
-    }
 
-    this.worksites = {items};
+    let newItems = items.filter(function(c) {
+        return c.WorksitesId.toString() !== Worksites._id.toString();;
+    });
+
+    this.worksites = {items: newItems};
     return this.save();
 }
 
