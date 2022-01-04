@@ -5,8 +5,24 @@ const Job = require('./schema');
 const Joi = require("@hapi/joi");
 const Worksites = require('../worksites/schema');
 const Employees = require('../employees/schema');
+const Equipment = require('../equipment/schema');
 
 module.exports = [
+    {
+        method: 'GET',
+        path: `/${MODEL_NAME}`,
+        options: {
+            auth: {
+                mode: 'try',
+                strategy: 'session60'
+            }
+        },
+        handler: async function (request, h) {
+            const worksites = await Worksites.find();
+            const employees= await Employees.find();
+            return h.response({worksites, employees}).code(200).takeover();
+        }
+    },
     {
         method: 'GET',
         path: `/${MODEL_NAME}/list`,
@@ -36,7 +52,8 @@ module.exports = [
                 // const worksite = await Worksites.findById(job.worksiteID);
                 const worksitesList = await Worksites.find();
                 const employees = await Employees.find();
-                return h.response({job, worksitesList, employees}).code(200).takeover();
+                const equipment = await Equipment.find();
+                return h.response({job, worksitesList, employees, equipment}).code(200).takeover();
             } catch (e) {
                 console.log(e);
             }
@@ -66,6 +83,7 @@ module.exports = [
 //            },
         },
         handler: async function (request, h) {
+            console.log('request.payload', request.payload)
             const job = new Job({
                 worksiteID: request.payload.worksiteID,
                 type: request.payload.type,
@@ -73,6 +91,7 @@ module.exports = [
                 serviceFee: request.payload.serviceFee,
                 startDate: request.payload.startDate,
                 endDate: request.payload.endDate,
+                employeesID: request.payload.employeesID
             });
             job.save();
             if (!job) {

@@ -58,12 +58,13 @@ export const ClientReportPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map(item => {
+                        {employees.map((item, index) => {
                         console.log('item', item)
-                            return( <tr key={item.name}>
-                                        <td>{item.name}</td>
-                                        <td>Eclair</td>
+                            return( <tr key={index}>
+                                        <td>{item.worksites.name}</td>
+                                        <td>{item.employees.name}</td>
                                         <td>87</td>
+                                        <td>{item.employees.salary}</td>
                                     </tr> )
                             })}
 

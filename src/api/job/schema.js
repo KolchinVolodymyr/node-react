@@ -16,18 +16,18 @@ const jobSchema = new Schema({
         type: String,
         required: true
     },
-    employee: {
-       type: Object,
-       required: true
-    },
+    // employee: {
+    //    type: Object,
+    //    required: true
+    // },
     serviceFee: {
         type: Number,
         required: true
     },
-//    additionalEquipment: {
-//        type: String,
-//        required: true
-//    }
+    additionalEquipment: {
+       type: String,
+       required: true
+    },
     startDate: {
         type: String,
         required: true

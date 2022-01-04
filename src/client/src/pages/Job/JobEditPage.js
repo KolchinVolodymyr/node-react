@@ -7,12 +7,12 @@ export const JobEditPage = () => {
     const ID = useParams().id;
     const {request} = useHttp();
     const [data, setData] = useState({
-        worksiteID: '', type: '', serviceFee: '', hazardousMaterials: '', startDate: '', endDate: '', employeesID: ''
+        worksiteID: '', type: '', serviceFee: '', hazardousMaterials: '',additionalEquipment: '', startDate: '', endDate: '', employeesID: ''
     });
     const [worksites, setWorksites] = useState([]);
     const [currentWorksiteID, setCurrentWorksiteID] = useState(null);
     const [employees, setEmployees] = useState([]);
-
+    const [equipment, setEquipment] = useState([]);
     const fetchClient = useCallback(async () => {
         try {
             const response = await request(`/job/${ID}/edit`, 'GET');
@@ -20,7 +20,8 @@ export const JobEditPage = () => {
             setWorksites(response.worksitesList);
             setCurrentWorksiteID(response.job.worksiteID);
             setEmployees(response.employees);
-
+            setEquipment(response.equipment)
+            console.log('response.equipment', response.equipment);
             // history.push(`/`);
         } catch (e) {console.log(e)}
     }, [ID, request]);
@@ -104,6 +105,22 @@ export const JobEditPage = () => {
                                 defaultValue={data.serviceFee}
                                 onChange={changeHandler}
                             />
+                    </div>
+                    <div>
+                        Additional equipment
+                        <select
+                            className="browser-default"
+                            value={data.additionalEquipment || 'Choose your option'}
+                            name="additionalEquipment"
+                            onChange={changeHandler}
+                        >
+                            <option value='Choose your option' disabled>Choose your option</option>
+                            {equipment.map(el => {
+                                return (
+                                    <option key={el._id} value={el._id}>{el.name}</option>
+                                )
+                            })}
+                        </select>
                     </div>
                          <label>
                             Start date:

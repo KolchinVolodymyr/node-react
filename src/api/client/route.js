@@ -181,20 +181,26 @@ module.exports = [
                 const promisesEmployees = clientWorksitesItem.map(async (item) => {
                     const promisesJob = item.job.items.map(async (index) => {
                         const job = await Job.findById(index.JobId);
-                        employeesName.push(job.employeesID)
+                        employeesName.push(job);
+                        // console.log('job name', job.worksiteID);
                     })
                     await Promise.all(promisesJob);
                 })
                 await Promise.all(promisesEmployees);
                 const employeesItem = [];
                 const promisesEmployeesItem = employeesName.map(async(el) => {
-                    console.log('el', el);
-                    const employees = await Employees.findById(el);
-                    console.log('employees', employees);
-                    employeesItem.push(employees)
+                    // console.log('el.worksiteID', el.worksiteID);
+                    const employees = await Employees.findById(el.employeesID);
+                    const worksites = await Worksites.findById(el.worksiteID);
+                    // console.log('employees', employees);
+                    employeesItem.push({
+                        employees: employees,
+                        job: el,
+                        worksites: worksites
+                    })
                 })
                 await Promise.all(promisesEmployeesItem);
-                console.log('employeesName', employeesName)
+                // console.log('employeesItem', employeesItem)
                 return h.response({client, clientWorksitesItem, employeesItem}).code(200).takeover();
             } catch (e) {
                 console.log(e);

@@ -1,19 +1,27 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {useHttp} from "../../hooks/http.hook";
 
 export const JobAddPage = () => {
     const {request} = useHttp();
     const [data, setData] = useState({
-        worksiteID: '', type: '', hazardousMaterials: '', serviceFee: '', startDate: '', endDate: ''
+        worksiteID: '', type: '', hazardousMaterials: '', serviceFee: '', startDate: '', endDate: '', employeesID: ''
     });
-    /*
-    worksiteID: request.payload.worksiteID,
-                    type: request.payload.type,
-                    hazardousMaterials: request.payload.hazardousMaterials,
-                    serviceFee: request.payload.serviceFee,
-                    startDate: request.payload.startDate,
-                    endDate: request.payload.endDate,
-    */
+    const [worksites, setWorksites] = useState([]);
+    const [employees, setEmployees] = useState([]);
+
+    const fetchClient = useCallback(async () => {
+        try {
+            const response = await request(`/job`, 'GET');
+            setWorksites(response.worksites);
+            setEmployees(response.employees);
+            console.log('response', response);
+            // history.push(`/`);
+        } catch (e) {console.log(e)}
+    }, [request]);
+
+    useEffect(()=>{
+        fetchClient()
+    }, []);
 
     const handleSubmitCreate = async () => {
         try {
@@ -27,7 +35,6 @@ export const JobAddPage = () => {
 
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
-        console.log('data', data)
     }
 
     return(
@@ -36,23 +43,19 @@ export const JobAddPage = () => {
                 Job add Page
             </h1>
             <form>
-            <label>Worksite:</label>
+                Worksite:
                 <select
                     className="browser-default"
-                    defaultValue='Choose your option'
+                    value={data.worksiteID || 'Choose your option'}
                     name="worksiteID"
                     onChange={changeHandler}
                 >
                     <option value='Choose your option' disabled>Choose your option</option>
-                    <option value='office'>office</option>
-                    <option value='residential building'>residential building</option>
-                    <option value='personal home'>personal home</option>
-                    <option value='individual apartment'>individual apartment</option>
-                    <option value='manufacturing'>manufacturing</option>
-                    <option value='warehouse'>warehouse</option>
-                    <option value='outdoor'>outdoor</option>
-                    <option value='field'>field</option>
-                    <option value='other'>other</option>
+                    {worksites.map(el => {
+                        return (
+                            <option key={el._id} value={el._id}>{el.name}</option>
+                        )
+                    })}
                 </select>
                 <label>Type:</label>
                     <select
@@ -106,6 +109,20 @@ export const JobAddPage = () => {
 
 
                 <button onClick={handleSubmitCreate} type="primary">Create</button>
+
+                <select
+                    className="browser-default"
+                    value={data.employeesID || "Choose your option"}
+                    name="employeesID"
+                    onChange={changeHandler}
+                >
+                    <option value='Choose your option' disabled>Choose your option</option>
+                    {employees.map(el =>{
+                        return (
+                            <option key={el._id} value={el._id}>{el.name}</option>
+                        )
+                    })}
+                </select>
             </form>
         </div>
     )
