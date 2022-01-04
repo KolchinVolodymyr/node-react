@@ -134,5 +134,50 @@ module.exports = [
                 console.log(e);
             }
         }
+    },
+//    {
+//        method: 'GET',
+//        path: `/${MODEL_NAME}/{id}/report`,
+//        options: {
+//            auth: {
+//                mode: 'try',
+//                strategy: 'session60'
+//            }
+//        },
+//        handler: async function (request, h) {
+//            try {
+////                const client = await Client.findById(request.payload.id);
+//                 console.log('request.payload', request.payload);
+////                console.log('client', client);
+//                return h.response({message: 'client'});
+//            } catch (e){
+//                console.log(e);
+//            }
+//        }
+//    },
+    {
+        method: 'GET',
+        path: `/${MODEL_NAME}/{id}/report`,
+        options: {
+            auth: {
+                mode: 'try',
+                strategy: 'session60'
+            }
+        },
+        handler: async function (request, h) {
+            try {
+                const client = await Client.findById(request.params.id);
+                // console.log('client', client.worksites.items);
+                const clientWorksitesItem = [];
+                const promises = client.worksites.items.map(async (el) => {
+                    const worksites = await Worksites.findById(el.WorksitesId);
+                    clientWorksitesItem.push(worksites);
+                })
+                await Promise.all(promises);
+                return h.response({client, clientWorksitesItem}).code(200).takeover();
+            } catch (e) {
+                console.log(e);
+            }
+        }
     }
 ]

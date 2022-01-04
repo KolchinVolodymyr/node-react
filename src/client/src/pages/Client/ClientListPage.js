@@ -73,6 +73,7 @@ export const ClientListPage = () => {
                                     >
                                         Delete
                                     </button>
+                                    <Link className="btn waves-effect waves-light" to={`/client/${item.id[1]._id}/report`}>Create report</Link>
                                 </div>
                             </div>
                         </div>)

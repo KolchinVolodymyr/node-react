@@ -13,6 +13,7 @@ import {CourseEditPage} from "./pages/CourseEditPage";
 import {ClientAddPage} from "./pages/Client/ClientAddPage";
 import {ClientListPage} from "./pages/Client/ClientListPage";
 import {ClientEditPage} from "./pages/Client/ClientEditPage";
+import {ClientReportPage} from "./pages/Client/ClientReportPage";
 import {WorksitesAddPage} from "./pages/Worksites/WorksitesAddPage";
 import {WorksitesListPage} from "./pages/Worksites/WorksitesListPage";
 import {WorksitesEditPage} from "./pages/Worksites/WorksitesEditPage";
@@ -72,6 +73,9 @@ export const useRoutes = isAuthenticated => {
             </Route>
             <Route path="/client/:id/edit">
                 <ClientEditPage />
+            </Route>
+            <Route path="/client/:id/report">
+                <ClientReportPage />
             </Route>
             <Route path="/worksites" exact>
                 <WorksitesAddPage />
