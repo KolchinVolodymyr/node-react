@@ -105,6 +105,15 @@ module.exports = [
         handler: async function (request, h) {
             try {
                 await Job.findByIdAndUpdate(request.payload.id, request.payload);
+                const job = await Job.findById(request.params.id);
+                const currentWorksites = await Worksites.findById(request.payload.currentWorksiteID);
+                if(currentWorksites !== null) {
+                    await currentWorksites.deleteJobs(job)
+                }
+                const worksites = await Worksites.findById(job.worksiteID);
+                if(worksites !== null) {
+                    await worksites.addToJobs(job);
+                }
                 return h.response({message: 'Data changed successfully!'}).code(200).takeover();
             } catch (e){
                 console.log(e);

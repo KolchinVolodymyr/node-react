@@ -9,14 +9,15 @@ export const JobEditPage = () => {
     const [data, setData] = useState({
         worksiteID: '', type: '', serviceFee: '', hazardousMaterials: '', startDate: '', endDate: ''
     });
-   const [worksites, setWorksites] = useState([]);
+    const [worksites, setWorksites] = useState([]);
+    const [currentWorksiteID, setCurrentWorksiteID] = useState(null);
 
     const fetchClient = useCallback(async () => {
         try {
             const response = await request(`/job/${ID}/edit`, 'GET');
             setData(response.job);
             setWorksites(response.worksitesList);
-            console.log('response.worksiteName', response.worksiteName);
+            setCurrentWorksiteID(response.job.worksiteID);
             // history.push(`/`);
         } catch (e) {console.log(e)}
     }, [ID, request]);
@@ -31,14 +32,14 @@ export const JobEditPage = () => {
 
     const PressHandler = async ()  => {
         try {
-            const response = await request(`/job/${ID}/edit`, 'PUT', {...data, id: ID});
+            const response = await request(`/job/${ID}/edit`, 'PUT', {...data, id: ID, currentWorksiteID: currentWorksiteID});
             // message(response.message);
             setData(response);
             history.push(`/job/list`);
         } catch (e) {console.log(e)}
 
     }
-    console.log('data', data)
+
     return(
         <div>
             <h1>
