@@ -7,10 +7,11 @@ export const JobEditPage = () => {
     const ID = useParams().id;
     const {request} = useHttp();
     const [data, setData] = useState({
-        worksiteID: '', type: '', serviceFee: '', hazardousMaterials: '', startDate: '', endDate: ''
+        worksiteID: '', type: '', serviceFee: '', hazardousMaterials: '', startDate: '', endDate: '', employeesID: ''
     });
     const [worksites, setWorksites] = useState([]);
     const [currentWorksiteID, setCurrentWorksiteID] = useState(null);
+    const [employees, setEmployees] = useState([]);
 
     const fetchClient = useCallback(async () => {
         try {
@@ -18,6 +19,8 @@ export const JobEditPage = () => {
             setData(response.job);
             setWorksites(response.worksitesList);
             setCurrentWorksiteID(response.job.worksiteID);
+            setEmployees(response.employees);
+
             // history.push(`/`);
         } catch (e) {console.log(e)}
     }, [ID, request]);
@@ -30,7 +33,7 @@ export const JobEditPage = () => {
         setData({...data, [event.target.name]: event.target.value});
     }
 
-    const PressHandler = async ()  => {
+    const PressHandler = async () => {
         try {
             const response = await request(`/job/${ID}/edit`, 'PUT', {...data, id: ID, currentWorksiteID: currentWorksiteID});
             // message(response.message);
@@ -127,7 +130,19 @@ export const JobEditPage = () => {
                         Save
                     </button>
                 </div>
-
+                <select
+                    className="browser-default"
+                    value={data.employeesID || "Choose your option"}
+                    name="employeesID"
+                    onChange={changeHandler}
+                    >
+                    <option value='Choose your option' disabled>Choose your option</option>
+                    {employees.map(el =>{
+                        return (
+                            <option key={el._id} value={el._id}>{el.name}</option>
+                        )
+                    })}
+                </select>
             </div>
         </div>
     )

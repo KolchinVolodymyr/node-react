@@ -6,12 +6,13 @@ export const ClientReportPage = () => {
 //    let history = useHistory();
     const ID = useParams().id;
     const [data, setData] = useState([]);
+    const [employees, setEmployees] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const {request} = useHttp();
     const loadMessage = async () => {
         try {
             const response = await request(`/client/${ID}/report`, 'GET')
-             console.log('response.clientWorksitesItem', response.clientWorksitesItem)
+             console.log('response', response)
             // message(response.message);
 //            let newArr = [];
 //            Object.entries(response.clientWorksitesItem).forEach((key, index)=> {
@@ -21,7 +22,7 @@ export const ClientReportPage = () => {
 //                })
 //                setIsLoaded(true);
 //            })
-
+            setEmployees(response.employeesItem)
             setData(response.clientWorksitesItem);
             setIsLoaded(true);
             console.log('data', data)
@@ -36,11 +37,10 @@ export const ClientReportPage = () => {
         loadMessage();
     }, [])
 
-
-
     if (!isLoaded) {
         return <div>Загрузка...</div>;
     } else {
+    console.log('employees', employees)
         return(
             <div>
                 <h1>
@@ -59,27 +59,14 @@ export const ClientReportPage = () => {
                     </thead>
                     <tbody>
                         {data.map(item => {
-                            return( <tr>
+                        console.log('item', item)
+                            return( <tr key={item.name}>
                                         <td>{item.name}</td>
                                         <td>Eclair</td>
                                         <td>87</td>
                                     </tr> )
                             })}
-                        <tr>
-                            <td>Alvin</td>
-                            <td>Eclair</td>
-                            <td>$0.87</td>
-                        </tr>
-                        <tr>
-                            <td>Alan</td>
-                            <td>Jellybean</td>
-                            <td>$3.76</td>
-                        </tr>
-                        <tr>
-                            <td>Jonathan</td>
-                            <td>Lollipop</td>
-                            <td>$7.00</td>
-                        </tr>
+
                     </tbody>
                 </table>
 

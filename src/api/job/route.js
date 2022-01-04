@@ -4,6 +4,7 @@ const MODEL_NAME = 'job';
 const Job = require('./schema');
 const Joi = require("@hapi/joi");
 const Worksites = require('../worksites/schema');
+const Employees = require('../employees/schema');
 
 module.exports = [
     {
@@ -34,7 +35,8 @@ module.exports = [
                 const job = await Job.findById(request.params.id);
                 // const worksite = await Worksites.findById(job.worksiteID);
                 const worksitesList = await Worksites.find();
-                return h.response({job, worksitesList}).code(200).takeover();
+                const employees = await Employees.find();
+                return h.response({job, worksitesList, employees}).code(200).takeover();
             } catch (e) {
                 console.log(e);
             }

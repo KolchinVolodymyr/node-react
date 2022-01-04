@@ -5,6 +5,9 @@ const jobSchema = new Schema({
         type: String,
         required: true
     },
+    employeesID: {
+        type: String,
+    },
     type: {
         type: String,
         required: true
