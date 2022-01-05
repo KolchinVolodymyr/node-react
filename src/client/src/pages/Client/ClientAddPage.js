@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useHttp} from "../../hooks/http.hook";
 
 export const ClientAddPage = () => {
@@ -7,21 +7,23 @@ export const ClientAddPage = () => {
         name: '', address: '', phone: '', contactPerson: '', client: '', status: ''
     });
 
-    const handleSubmitCreate = async () => {
+    const handleSubmitCreate = async (event) => {
         try {
             const response = await request('/client', 'POST', {...data})
             // message(response.message);
             setData(response);
-            console.log('response.message', response.message);
+            console.log('event', event);
             // history.push(`/`);
         } catch (e) {console.log(e)}
     };
 
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
+        console.log('data', data)
     }
     const changeHandlerChecked = (event) => {
         setData({...data, [event.target.name]: event.target.checked});
+        console.log('data', data)
     }
 
     return(

@@ -28,7 +28,7 @@ export const ClientEditPage = () => {
 
             // history.push(`/`);
         } catch (e) {console.log(e)}
-    }, [ID, request]);
+    }, [ID, request, count]);
 
     useEffect(()=>{
         fetchClient()

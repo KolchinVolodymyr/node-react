@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {useHttp} from "../../hooks/http.hook";
 
 export const ClientReportPage = () => {
@@ -8,24 +8,23 @@ export const ClientReportPage = () => {
     const [data, setData] = useState([]);
     const [employees, setEmployees] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
+    const total = 0;
+//    const [total, setTotal] = useState([]);
     const {request} = useHttp();
     const loadMessage = async () => {
         try {
             const response = await request(`/client/${ID}/report`, 'GET')
-             console.log('response', response)
-            // message(response.message);
-//            let newArr = [];
-//            Object.entries(response.clientWorksitesItem).forEach((key, index)=> {
-//                newArr.push({
-//                    id: key,
-//                    name: `Client ${index+1}`
-//                })
-//                setIsLoaded(true);
-//            })
-            setEmployees(response.employeesItem)
+            console.log('response', response);
+            setEmployees(response.employeesItem);
+
+            response.employeesItem.forEach(el => {
+                el.total = el.employees.salary;
+                el.job.additionalEquipment.forEach(index => {
+                    el.total += Number(index.usageFee);
+                })
+            })
             setData(response.clientWorksitesItem);
             setIsLoaded(true);
-            console.log('data', data)
             // history.push(`/`);
         } catch (e) {console.log(e)}
     };
@@ -40,8 +39,6 @@ export const ClientReportPage = () => {
     if (!isLoaded) {
         return <div>Загрузка...</div>;
     } else {
-    console.log('employees', employees);
-
         return(
             <div>
                 <h1>
@@ -67,6 +64,7 @@ export const ClientReportPage = () => {
                                     <td>--</td>
                                     <td>{item.employees.salary}</td>
                                     <td>0</td>
+                                    <td>{item.total}</td>
                                 </tr> )
                             } else {
                                 return( <tr key={index}>
@@ -79,6 +77,7 @@ export const ClientReportPage = () => {
                                     <td>{item.job.additionalEquipment.map((el)=>{
                                         return(<div key={el._id}>{el.usageFee}</div>)
                                     })}</td>
+                                    <td>{item.total}</td>
                                 </tr> )
                             }
                         })}
