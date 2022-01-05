@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {useParams, useHistory} from "react-router-dom";
 import {useHttp} from "../../hooks/http.hook";
+import Multiselect from 'multiselect-react-dropdown';
 
 export const JobEditPage = () => {
     let history = useHistory();
@@ -13,6 +14,7 @@ export const JobEditPage = () => {
     const [currentWorksiteID, setCurrentWorksiteID] = useState(null);
     const [employees, setEmployees] = useState([]);
     const [equipment, setEquipment] = useState([]);
+    const [additionalEquipment, setAdditionalEquipment] = useState({});
     const fetchClient = useCallback(async () => {
         try {
             const response = await request(`/job/${ID}/edit`, 'GET');
@@ -21,7 +23,7 @@ export const JobEditPage = () => {
             setCurrentWorksiteID(response.job.worksiteID);
             setEmployees(response.employees);
             setEquipment(response.equipment)
-            console.log('response.equipment', response.equipment);
+            // console.log('response.equipment', response.equipment);
             // history.push(`/`);
         } catch (e) {console.log(e)}
     }, [ID, request]);
@@ -36,12 +38,20 @@ export const JobEditPage = () => {
 
     const PressHandler = async () => {
         try {
-            const response = await request(`/job/${ID}/edit`, 'PUT', {...data, id: ID, currentWorksiteID: currentWorksiteID});
+            const response = await request(`/job/${ID}/edit`, 'PUT', {...data, id: ID, currentWorksiteID: currentWorksiteID, additionalEquipment: additionalEquipment});
             // message(response.message);
             setData(response);
             history.push(`/job/list`);
         } catch (e) {console.log(e)}
 
+    }
+
+    function onSelect(selectedList, selectedItem) {
+        setAdditionalEquipment(selectedList);
+    }
+
+    function onRemove(selectedList, removedItem) {
+        setAdditionalEquipment(selectedList);
     }
 
     return(
@@ -62,7 +72,7 @@ export const JobEditPage = () => {
                         <option value='Choose your option' disabled>Choose your option</option>
                         {worksites.map(el => {
                             return (
-                                <option key={el._id} value={el._id}>{el.name}</option>
+                                <option key={el.name} value={el._id}>{el.name}</option>
                             )
                         })}
                         </select>
@@ -108,19 +118,13 @@ export const JobEditPage = () => {
                     </div>
                     <div>
                         Additional equipment
-                        <select
-                            className="browser-default"
-                            value={data.additionalEquipment || 'Choose your option'}
-                            name="additionalEquipment"
-                            onChange={changeHandler}
-                        >
-                            <option value='Choose your option' disabled>Choose your option</option>
-                            {equipment.map(el => {
-                                return (
-                                    <option key={el._id} value={el._id}>{el.name}</option>
-                                )
-                            })}
-                        </select>
+                        <Multiselect
+                            options={equipment} // Options to display in the dropdown
+                            selectedValues={data.additionalEquipment} // Preselected value to persist in dropdown
+                            onSelect={onSelect} // Function will trigger on select event
+                            onRemove={onRemove} // Function will trigger on remove event
+                            displayValue="name" // Property name to display in the dropdown options
+                        />
                     </div>
                          <label>
                             Start date:

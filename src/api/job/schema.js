@@ -25,7 +25,7 @@ const jobSchema = new Schema({
         required: true
     },
     additionalEquipment: {
-       type: String,
+       type: Object,
        required: true
     },
     startDate: {
