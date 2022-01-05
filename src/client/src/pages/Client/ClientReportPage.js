@@ -40,7 +40,8 @@ export const ClientReportPage = () => {
     if (!isLoaded) {
         return <div>Загрузка...</div>;
     } else {
-    console.log('employees', employees)
+    console.log('employees', employees);
+
         return(
             <div>
                 <h1>
@@ -59,15 +60,28 @@ export const ClientReportPage = () => {
                     </thead>
                     <tbody>
                         {employees.map((item, index) => {
-                        console.log('item', item)
-                            return( <tr key={index}>
-                                        <td>{item.worksites.name}</td>
-                                        <td>{item.employees.name}</td>
-                                        <td>87</td>
-                                        <td>{item.employees.salary}</td>
-                                    </tr> )
-                            })}
-
+                            if(item.job.additionalEquipment.length == 0) {
+                                return( <tr key={index}>
+                                    <td>{item.worksites.name}</td>
+                                    <td>{item.employees.name}</td>
+                                    <td>--</td>
+                                    <td>{item.employees.salary}</td>
+                                    <td>0</td>
+                                </tr> )
+                            } else {
+                                return( <tr key={index}>
+                                    <td>{item.worksites.name}</td>
+                                    <td>{item.employees.name}</td>
+                                    <td>{item.job.additionalEquipment.map((el)=>{
+                                        return(<div key={el._id}>{el.name}</div>)
+                                    })}</td>
+                                    <td>{item.employees.salary}</td>
+                                    <td>{item.job.additionalEquipment.map((el)=>{
+                                        return(<div key={el._id}>{el.usageFee}</div>)
+                                    })}</td>
+                                </tr> )
+                            }
+                        })}
                     </tbody>
                 </table>
 
