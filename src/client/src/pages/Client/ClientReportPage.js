@@ -6,7 +6,7 @@ export const ClientReportPage = () => {
 //    let history = useHistory();
     const ID = useParams().id;
     const [data, setData] = useState([]);
-    const [month, setMonth ] = useState([]);
+    const [month, setMonth] = useState([]);
     const [currentMonth, setCurrentMonth] = useState([]);
     const [employees, setEmployees] = useState([]);
     const [employeesRender, setEmployeesRender] = useState([]);
@@ -18,21 +18,10 @@ export const ClientReportPage = () => {
             const response = await request(`/client/${ID}/report`, 'GET')
             // console.log('response', response.employeesItem);
             response.employeesItem.forEach(el =>{
-                month.push(el.job.startDate);
+                if (month.indexOf(el.job.startDate.slice(0, -3)) == -1) {
+                    month.push(el.job.startDate.slice(0, -3));
+                }
             })
-            // let newEmployees = [];
-            // response.employeesItem.forEach((a) => {
-            //     console.log('a forEach', a);
-            //         if('2021-12-12' === a.job.startDate) {
-            //             console.log('IF a.job.startDate', a.job);
-            //             newEmployees.push(a);
-            //             setEmployees(newEmployees);
-            //             // console.log('newEmployees', newEmployees);
-            //         }
-            //     // console.log('111 newEmployees', newEmployees);
-            // })
-            // console.log('12employees', employees);
-            // setEmployees(newEmployees);
 
             setEmployees(response.employeesItem);
 
@@ -58,14 +47,13 @@ export const ClientReportPage = () => {
     const changeHandler = event => {
         setCurrentMonth({...currentMonth, [event.target.name]: event.target.value});
         let newEmployees = [];
-        console.log('.slice(0, -1)', event.target.value.slice(0, -3))
+
         employees.forEach((a) => {
-            if(event.target.value.slice(0, -3) === a.job.startDate.slice(0, -3)) {
+            if(event.target.value === a.job.startDate.slice(0, -3)) {
                 newEmployees.push(a);
                 setEmployeesRender(newEmployees);
             }
         })
-        console.log('setEmployeesRender', employeesRender)
     }
 
     if (!isLoaded) {
@@ -103,7 +91,6 @@ export const ClientReportPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-
                         {employeesRender.map((item, index) => {
                             if(item.job.additionalEquipment.length == 0) {
                                 return( <tr key={index}>
