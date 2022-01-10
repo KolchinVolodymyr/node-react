@@ -189,7 +189,7 @@ module.exports = [
                 await Promise.all(promisesEmployees);
                 const employeesItem = [];
                 const promisesEmployeesItem = employeesName.map(async(el) => {
-                    // console.log('el.worksiteID', el.worksiteID);
+                    // console.log('el.D', el);
                     const employees = await Employees.findById(el.employeesID);
                     const worksites = await Worksites.findById(el.worksiteID);
                     // console.log('employees', employees);

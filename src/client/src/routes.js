@@ -26,6 +26,7 @@ import {EmployeesEditPage} from "./pages/Employees/EmployeesEditPage";
 import {EquipmentAddPage} from "./pages/Equipment/EquipmentAddPage";
 import {EquipmentListPage} from "./pages/Equipment/EquipmentListPage";
 import {EquipmentEditPage} from "./pages/Equipment/EquipmentEditPage";
+import {MonthlyEarningsReport} from "./pages/Reports/MonthlyEarningsReport";
 
 export const useRoutes = isAuthenticated => {
     if (isAuthenticated) {
@@ -115,6 +116,9 @@ export const useRoutes = isAuthenticated => {
             </Route>
             <Route path="/courses" exact>
                 <CoursesPage />
+            </Route>
+            <Route path="/MonthlyEarningsReport" exact>
+                <MonthlyEarningsReport />
             </Route>
             <Route path="/courses/:id" exact>
                 <CourseDetailPage />
