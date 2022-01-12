@@ -1,30 +1,36 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useHttp} from "../../hooks/http.hook";
+import {useMessage} from "../../hooks/message.hook";
+import {useHistory} from "react-router-dom";
 
 export const ClientAddPage = () => {
-    const {request} = useHttp();
+    const history = useHistory();
+    const {request, loading, clearError, error} = useHttp();
+    const message = useMessage();
     const [data, setData] = useState({
-        name: '', address: '', phone: '', contactPerson: '', client: '', status: ''
+        name: '', address: '', phone: '', contactPerson: '', client: '', status: false
     });
 
-    const handleSubmitCreate = async (event) => {
+    const handleSubmitCreate = async () => {
         try {
             const response = await request('/client', 'POST', {...data})
-            // message(response.message);
+            message(response.message);
             setData(response);
-            console.log('event', event);
-            // history.push(`/`);
+            history.push(`/client/list`);
         } catch (e) {console.log(e)}
     };
 
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
-        console.log('data', data)
     }
     const changeHandlerChecked = (event) => {
         setData({...data, [event.target.name]: event.target.checked});
-        console.log('data', data)
     }
+
+    useEffect(() => {
+        message(error);
+        clearError();
+    }, [error, message, clearError])
 
     return(
         <div>
@@ -38,6 +44,7 @@ export const ClientAddPage = () => {
                         type="text"
                         name="name"
                         onChange={changeHandler}
+                        required
                     />
                 </label>
                 <label>
@@ -88,7 +95,13 @@ export const ClientAddPage = () => {
                         <span>Status</span>
                     </label>
                 </p>
-                <button onClick={handleSubmitCreate} type="primary">Create</button>
+                <button
+                    className="btn btn-primary"
+                    onClick={handleSubmitCreate}
+                    disabled={loading}
+                >
+                    Create
+                </button>
             </form>
         </div>
     )

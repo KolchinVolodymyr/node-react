@@ -55,20 +55,21 @@ module.exports = [
                 mode: 'try',
                 strategy: 'session60'
             },
-            // validate: {
-            //     payload: Joi.object({
-            //         name: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
-            //         address: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
-            //         phone: Joi.number().integer().required().error(new Error('Enter the correct phone')),
-            //         contactPerson: Joi.number().integer().required().error(new Error('Enter the correct Contact Person'))
-            //     }),
-            //     options: {
-            //         allowUnknown: true,
-            //     },
-            //     failAction: (request, h, err) => {
-            //         return h.response({message: err.output.payload.message}).code(400).takeover();
-            //     }
-            // },
+            validate: {
+                payload: Joi.object({
+                    name: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
+                    address: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
+                    phone: Joi.number().integer().required().error(new Error('Enter the correct phone')),
+                    contactPerson: Joi.string().min(3).required().error(new Error('Enter the correct Contact Person')),
+                    client: Joi.string().min(3).required().error(new Error('Enter the correct client')),
+                }),
+                options: {
+                    allowUnknown: true,
+                },
+                failAction: (request, h, err) => {
+                    return h.response({message: err.output.payload.message}).code(400).takeover();
+                }
+            },
         },
         handler: async function (request, h) {
             const client = new Client({
@@ -84,7 +85,7 @@ module.exports = [
             if (!client) {
                 return h.response({message: 'An error occured, please try again later!'})
             }
-            return h.response({message: 'Course successfully created !!!'}).code(201).takeover();
+            return h.response({message: 'Client successfully created !!!'}).code(201).takeover();
         }
     },
     {
@@ -95,20 +96,20 @@ module.exports = [
                 mode: 'try',
                 strategy: 'session60'
             },
-            validate: {
-                payload: Joi.object({
-                    name: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
-                    address: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
-                    phone: Joi.number().integer().required().error(new Error('Enter the correct phone')),
-                    contactPerson: Joi.number().integer().required().error(new Error('Enter the correct Contact Person'))
-                }),
-                options: {
-                    allowUnknown: true,
-                },
-                failAction: async (request, h, err) => {
-                    return h.response({message: err.output.payload.message}).code(400).takeover();
-                }
-            },
+            // validate: {
+            //     payload: Joi.object({
+            //         name: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
+            //         address: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
+            //         phone: Joi.number().integer().required().error(new Error('Enter the correct phone')),
+            //         contactPerson: Joi.number().integer().required().error(new Error('Enter the correct Contact Person'))
+            //     }),
+            //     options: {
+            //         allowUnknown: true,
+            //     },
+            //     failAction: async (request, h, err) => {
+            //         return h.response({message: err.output.payload.message}).code(400).takeover();
+            //     }
+            // },
         },
         handler: async function (request, h) {
             try {

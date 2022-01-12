@@ -15,7 +15,7 @@ const clientSchema = new Schema({
         required: true
     },
     contactPerson: {
-        type: Number,
+        type: String,
         required: true
     },
     client: {
