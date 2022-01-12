@@ -38,32 +38,18 @@ module.exports = [
                         const employees = await Employees.findById(job.employeesID);
                         const worksites = await Worksites.findById(job.worksiteID);
                         const client = await Client.findById(worksites.clientID);
-                        console.log('client', client);
+                        // console.log('client', client);
                         // dataJob.push(job);
                         dataJob.push({
                             employees: employees,
                             worksites: worksites,
                             client: client,
+                            job: job,
                         })
                     });
                     await Promise.all(promisesWorksitesJob);
                 })
                 await Promise.all(promisesClientWorksites);
-
-                // const dataList = [];
-                // const promisesJob = dataJob.map(async (el)=>{
-                //     // console.log('el', el);
-                //     // console.log('ie', el.worksiteID);
-                //     // console.log('employeesID:', el.employeesID);
-                //     const employees = await Employees.findById(el.employeesID);
-                //     const worksites = await Worksites.findById(el.worksiteID);
-                //     console.log('worksites', worksites);
-                //     dataList.push({
-                //         employees: employees,
-                //         worksites: worksites,
-                //     })
-                // })
-                // await Promise.all(promisesJob);
 
                 return h.response({dataJob, client, clientWorksites}).code(200).takeover();
             } catch (e) {

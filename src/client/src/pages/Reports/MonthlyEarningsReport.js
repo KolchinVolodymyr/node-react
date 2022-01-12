@@ -4,16 +4,37 @@ import {useHttp} from "../../hooks/http.hook";
 export const  MonthlyEarningsReport = () => {
     const {request} = useHttp();
     const [data, setData] = useState([]);
-    const [dataEmployee, setDataEmployee] = useState([]);
+    const [employeeTotal, setEmployeeTotal] = useState(0);
+    const [equipmentTotal, setEquipmentTotal] = useState(0);
+    const [currentMonth, setCurrentMonth] = useState([]);
+    const [month, setMonth] = useState([]);
+    const [dataRender, setDataRender] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
     const loadMessage = async () => {
         try {
             const response = await request('/monthlyEarningsReport', 'GET')
             // message(response.message);
-            console.log('response', response);
-            setData(response.client)
-            // setDataEmployee(response.dataList)
+            console.log('response dataJob', response);
+
+            let arrMonth = [];
+            response.dataJob.forEach(el => {
+                if (arrMonth.indexOf(el.job.startDate.slice(0, -3)) == -1) {
+                    arrMonth.push(el.job.startDate.slice(0, -3));
+                    // arrMonth.push(el.job.endDate.slice(0, -3));
+                }
+                if (arrMonth.indexOf(el.job.endDate.slice(0, -3)) == -1) {
+                    // arrMonth.push(el.job.startDate.slice(0, -3));
+                    arrMonth.push(el.job.endDate.slice(0, -3));
+                }
+
+                el.total = el.employees.salary;
+                el.job.additionalEquipment.forEach(index => {
+                    el.total += Number(index.usageFee);
+                })
+            })
+            setMonth(arrMonth);
+            setData(response.dataJob);
             // history.push(`/`);
         } catch (e) {console.log(e)}
     };
@@ -24,12 +45,46 @@ export const  MonthlyEarningsReport = () => {
     useEffect(()=> {
         loadMessage();
     }, [])
-console.log('dataEmployee', dataEmployee)
+
+    const changeHandler = event => {
+        let EmployeeTotal = 0;
+        let EquipmentTotal = 0;
+        setCurrentMonth({...currentMonth, [event.target.name]: event.target.value});
+        let newData = [];
+
+        data.forEach((a) => {
+            if(event.target.value === a.job.startDate.slice(0, -3) || event.target.value === a.job.endDate.slice(0, -3)) {
+                newData.push(a);
+                setDataRender(newData);
+                EmployeeTotal += Number(a.employees.salary);
+                setEmployeeTotal(EmployeeTotal);
+                a.job.additionalEquipment.forEach(index => {
+                    EquipmentTotal += Number(index.usageFee);
+                })
+                setEquipmentTotal(EquipmentTotal);
+            }
+        })
+    }
+
     return(
         <div>
             <h1>
                 Monthly Earnings Report Page
             </h1>
+            <label>Date and month</label>
+            <select
+                className="browser-default"
+                defaultValue={data.client || ""}
+                name="date"
+                onChange={changeHandler}
+            >
+                <option value='Choose your option' disabled>Choose your option</option>
+                {month.map((el, index) => {
+                    return (
+                        <option key={index} value={el}>{el}</option>
+                    )
+                })}
+            </select>
             <table>
                 <thead>
                 <tr>
@@ -40,13 +95,38 @@ console.log('dataEmployee', dataEmployee)
                 </tr>
                 </thead>
                 <tbody>
-                {data.map((item, index) => {
-                    console.log('item', item)
-                    return( <tr key={index}>
-                        <td>{item.name}</td>
-                    </tr> )
-                })}
+                {dataRender.map((item, index) => {
+                    return(
+                        <tr key={index}>
+                            <td>{item.client.name}</td>
+                            <td>{item.employees.salary}</td>
+                            <td>{item.job.additionalEquipment.map((el, index)=>{
+                                if(item.job.additionalEquipment.length == 0) {
+                                    return(
+                                        <div key={index}>
+                                            <div>0</div>
+                                        </div>
+                                    )
+                                } else {
+                                    return(
+                                        <div key={index}>
+                                            <div >{el.usageFee}</div>
+                                        </div>
+                                    )
+                                }
 
+                            })}
+                            </td>
+                            <td>{item.total}</td>
+                        </tr> )
+
+                })}
+                <tr>
+                    <th>Total</th>
+                    <td>{employeeTotal}</td>
+                    <td>{equipmentTotal}</td>
+                    <td>{equipmentTotal+employeeTotal}</td>
+                </tr>
                 </tbody>
             </table>
         </div>
