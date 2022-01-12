@@ -1,11 +1,13 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {useParams, useHistory} from "react-router-dom";
 import {useHttp} from "../../hooks/http.hook";
+import {useMessage} from "../../hooks/message.hook";
 
 export const ClientEditPage = () => {
     let history = useHistory();
     const ID = useParams().id;
-    const {request} = useHttp();
+    const {request, clearError, error} = useHttp();
+    const message = useMessage();
     const [data, setData] = useState({
         name: '', address: '', phone: '', contactPerson: '', client: '', status: ''
     });
@@ -14,7 +16,7 @@ export const ClientEditPage = () => {
     const fetchClient = useCallback(async () => {
         try {
             const response = await request(`/client/${ID}/edit`, 'GET')
-            // message(response.message);
+            message(response.message);
             setData(response.client);
 
             const promises = response.clientWorksitesItem.map(async(el) => {
@@ -33,6 +35,12 @@ export const ClientEditPage = () => {
     useEffect(()=>{
         fetchClient()
     }, [fetchClient]);
+
+    useEffect(() => {
+        message(error);
+        clearError();
+    }, [error, message, clearError])
+
 
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});

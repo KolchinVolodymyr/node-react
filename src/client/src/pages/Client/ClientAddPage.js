@@ -23,7 +23,7 @@ export const ClientAddPage = () => {
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
     }
-    const changeHandlerChecked = (event) => {
+    const changeHandlerChecked = event => {
         setData({...data, [event.target.name]: event.target.checked});
     }
 

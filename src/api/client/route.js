@@ -61,7 +61,7 @@ module.exports = [
                     address: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
                     phone: Joi.number().integer().required().error(new Error('Enter the correct phone')),
                     contactPerson: Joi.string().min(3).required().error(new Error('Enter the correct Contact Person')),
-                    client: Joi.string().min(3).required().error(new Error('Enter the correct client')),
+                    client: Joi.string().min(3).required().error(new Error('Enter the correct client: corporate or personal')),
                 }),
                 options: {
                     allowUnknown: true,
@@ -96,20 +96,21 @@ module.exports = [
                 mode: 'try',
                 strategy: 'session60'
             },
-            // validate: {
-            //     payload: Joi.object({
-            //         name: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
-            //         address: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
-            //         phone: Joi.number().integer().required().error(new Error('Enter the correct phone')),
-            //         contactPerson: Joi.number().integer().required().error(new Error('Enter the correct Contact Person'))
-            //     }),
-            //     options: {
-            //         allowUnknown: true,
-            //     },
-            //     failAction: async (request, h, err) => {
-            //         return h.response({message: err.output.payload.message}).code(400).takeover();
-            //     }
-            // },
+            validate: {
+                payload: Joi.object({
+                    name: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
+                    address: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
+                    phone: Joi.number().integer().required().error(new Error('Enter the correct phone')),
+                    contactPerson: Joi.string().min(3).required().error(new Error('Enter the correct Contact Person')),
+                    client: Joi.string().min(3).required().error(new Error('Enter the correct client: corporate or personal')),
+                }),
+                options: {
+                    allowUnknown: true,
+                },
+                failAction: async (request, h, err) => {
+                    return h.response({message: err.output.payload.message}).code(400).takeover();
+                }
+            },
         },
         handler: async function (request, h) {
             try {
@@ -138,26 +139,6 @@ module.exports = [
             }
         }
     },
-//    {
-//        method: 'GET',
-//        path: `/${MODEL_NAME}/{id}/report`,
-//        options: {
-//            auth: {
-//                mode: 'try',
-//                strategy: 'session60'
-//            }
-//        },
-//        handler: async function (request, h) {
-//            try {
-////                const client = await Client.findById(request.payload.id);
-//                 console.log('request.payload', request.payload);
-////                console.log('client', client);
-//                return h.response({message: 'client'});
-//            } catch (e){
-//                console.log(e);
-//            }
-//        }
-//    },
     {
         method: 'GET',
         path: `/${MODEL_NAME}/{id}/report`,
@@ -170,7 +151,6 @@ module.exports = [
         handler: async function (request, h) {
             try {
                 const client = await Client.findById(request.params.id);
-                // console.log('client', client.worksites.items);
                 const clientWorksitesItem = [];
                 const promises = client.worksites.items.map(async (el) => {
                     const worksites = await Worksites.findById(el.WorksitesId);
@@ -183,17 +163,14 @@ module.exports = [
                     const promisesJob = item.job.items.map(async (index) => {
                         const job = await Job.findById(index.JobId);
                         employeesName.push(job);
-                        // console.log('job name', job.worksiteID);
                     })
                     await Promise.all(promisesJob);
                 })
                 await Promise.all(promisesEmployees);
                 const employeesItem = [];
                 const promisesEmployeesItem = employeesName.map(async(el) => {
-                    // console.log('el.D', el);
                     const employees = await Employees.findById(el.employeesID);
                     const worksites = await Worksites.findById(el.worksiteID);
-                    // console.log('employees', employees);
                     employeesItem.push({
                         employees: employees,
                         job: el,
@@ -201,7 +178,6 @@ module.exports = [
                     })
                 })
                 await Promise.all(promisesEmployeesItem);
-                // console.log('employeesItem', employeesItem)
                 return h.response({client, clientWorksitesItem, employeesItem}).code(200).takeover();
             } catch (e) {
                 console.log(e);
