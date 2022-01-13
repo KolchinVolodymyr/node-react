@@ -3,6 +3,7 @@
 const MODEL_NAME = 'employees';
 const Employess = require('./schema');
 const Joi = require("@hapi/joi");
+const Job = require('../job/schema');
 
 module.exports = [
     {
@@ -31,7 +32,14 @@ module.exports = [
         handler: async function (request, h) {
             try {
                 const employees = await Employess.findById(request.params.id);
-                return h.response({employees}).code(200).takeover();
+                const job = await Job.find();
+                let employeesJob = [];
+                job.map((el)=>{
+                    if(el.employeesID === request.params.id) {
+                        employeesJob.push(el)
+                    }
+                })
+                return h.response({employees, employeesJob}).code(200).takeover();
             } catch (e) {
                 console.log(e);
             }

@@ -27,7 +27,7 @@ export const WorksitesEditPage = () => {
                     setCount(count+1)
                 }
             })
-            await Promise.all(promises);;
+            await Promise.all(promises);
         } catch (e) {console.log(e)}
     }, [ID, request]);
 
