@@ -31,7 +31,11 @@ const jobSchema = new Schema({
     endDate: {
         type: String,
         required: true
-    }
+    },
+    status: {
+        type: Boolean,
+        required: true
+    },
 })
 
 module.exports = model('Job', jobSchema)

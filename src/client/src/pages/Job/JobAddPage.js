@@ -9,7 +9,7 @@ export const JobAddPage = () => {
     const {request, loading, clearError, error} = useHttp();
     const message = useMessage();
     const [data, setData] = useState({
-        worksiteID: '', type: '', hazardousMaterials: '', serviceFee: '', startDate: '', endDate: '', employeesID: ''
+        worksiteID: '', type: '', hazardousMaterials: '', serviceFee: '', startDate: '', endDate: '', employeesID: '', status: false
     });
     const [worksites, setWorksites] = useState([]);
     const [employees, setEmployees] = useState([]);
@@ -46,6 +46,10 @@ export const JobAddPage = () => {
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
     }
+    const changeHandlerChecked = event => {
+        setData({...data, [event.target.name]: event.target.checked});
+    }
+
     function onSelect(selectedList, selectedItem) {
         setAdditionalEquipment(selectedList);
     }
@@ -149,6 +153,18 @@ export const JobAddPage = () => {
                         })}
                     </select>
                 </label>
+                <p>
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="status"
+                            className="filled-in"
+                            checked={data.status}
+                            onChange={changeHandlerChecked}
+                        />
+                        <span>Status</span>
+                    </label>
+                </p>
                 <button
                     className="btn btn-primary"
                     onClick={handleSubmitCreate}
