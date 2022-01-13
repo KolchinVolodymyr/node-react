@@ -15,7 +15,6 @@ export const ClientAddPage = () => {
         try {
             const response = await request('/client', 'POST', {...data})
             message(response.message);
-            setData(response);
             history.push(`/client/list`);
         } catch (e) {console.log(e)}
     };
@@ -35,7 +34,7 @@ export const ClientAddPage = () => {
     return(
         <div>
             <h1>
-                Client Page
+                Create Client
             </h1>
             <form>
                 <label>

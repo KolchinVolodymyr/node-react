@@ -3,8 +3,7 @@
 const MODEL_NAME = 'worksites';
 const Worksites = require('./schema');
 const Client = require('../client/schema');
-const User = require("../profile/schema");
-const Order = require("../order/schema");
+const Joi = require("@hapi/joi");
 
 module.exports = [
     {
@@ -33,6 +32,19 @@ module.exports = [
                 mode: 'try',
                 strategy: 'session60'
             },
+            validate: {
+                payload: Joi.object({
+                    name: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
+                    address: Joi.string().min(3).required().error(new Error('Minimum address length 3 characters')),
+                    type: Joi.string().min(1).required().error(new Error('Select from the dropdown list')),
+                }),
+                options: {
+                    allowUnknown: true,
+                },
+                failAction: (request, h, err) => {
+                    return h.response({message: err.output.payload.message}).code(400).takeover();
+                }
+            },
         },
         handler: async function (request, h) {
             const worksites = new Worksites({
@@ -45,7 +57,7 @@ module.exports = [
             if (!worksites) {
                 return h.response({message: 'An error occured, please try again later!'})
             }
-            return h.response({message: 'Course successfully created !!!'}).code(201).takeover();
+            return h.response({message: 'Worksites successfully created !!!'}).code(201).takeover();
         }
     },
     {
@@ -76,6 +88,19 @@ module.exports = [
                 mode: 'try',
                 strategy: 'session60'
             },
+            validate: {
+                payload: Joi.object({
+                    name: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
+                    address: Joi.string().min(3).required().error(new Error('Minimum address length 3 characters')),
+                    type: Joi.string().min(1).required().error(new Error('Select from the dropdown list')),
+                }),
+                options: {
+                    allowUnknown: true,
+                },
+                failAction: (request, h, err) => {
+                    return h.response({message: err.output.payload.message}).code(400).takeover();
+                }
+            },
         },
         handler: async function (request, h) {
             try {
@@ -91,7 +116,7 @@ module.exports = [
                 if(client !== null) {
                     await client.addToWorksites(worksites);
                 }
-                return h.response({message: 'Data changed successfully!'}).code(200).takeover();
+                return h.response({message: 'Worksites changed successfully!'}).code(200).takeover();
             } catch (e){
                 console.log(e);
             }

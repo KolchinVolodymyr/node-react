@@ -22,15 +22,11 @@ export const ClientEditPage = () => {
             const promises = response.clientWorksitesItem.map(async(el) => {
                 if(el.status == 'true') {
                     setCount(count+1)
-                    console.log('setCount forEach-1', count);
                 }
-                console.log('setCount forEach', count);
             })
             await Promise.all(promises);
-
-            // history.push(`/`);
         } catch (e) {console.log(e)}
-    }, [ID, request, count]);
+    }, [ID, request]);
 
     useEffect(()=>{
         fetchClient()
@@ -41,28 +37,25 @@ export const ClientEditPage = () => {
         clearError();
     }, [error, message, clearError])
 
-
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
     }
     const changeHandlerChecked = (event) => {
         if(event.target.checked === true) {
-            // console.log('status', data.status);
             setData({...data, [event.target.name] : event.target.checked });
         } else {
             if(count === 0){
                 setData({...data, [event.target.name] : event.target.checked });
             } else {
-                console.log('message error');
+                message('Client with active worksites cannot be deactivated');
             }
         }
-
     }
 
     const PressHandler = async ()  => {
         try {
             const response = await request(`/client/${ID}/edit`, 'PUT', {...data, id: ID});
-            // message(response.message);
+            message(response.message);
             setData(response);
             history.push(`/client/list`);
         } catch (e) {console.log(e)}

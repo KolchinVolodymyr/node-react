@@ -2,11 +2,13 @@ import React, {useState, useEffect} from 'react';
 import {Link} from "react-router-dom";
 import {useHttp} from "../../hooks/http.hook";
 import {Loader} from "../../components/loader";
+import {useMessage} from "../../hooks/message.hook";
 
 export const ClientListPage = () => {
     const [data, setData] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const {request} = useHttp();
+    const message = useMessage();
     const loadMessage = async () => {
         try {
             const response = await request('/client/list', 'GET')
@@ -31,8 +33,8 @@ export const ClientListPage = () => {
 
     const onRemove = async (id)  => {
         try {
-            await request('/client/remove', 'DELETE', {id: id});
-            // message(response.message);
+            const response = await request('/client/remove', 'DELETE', {id: id});
+            message(response.message);
             loadMessage();
         } catch (e) {console.log(e)}
     }

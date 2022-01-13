@@ -34,7 +34,6 @@ module.exports = [
         handler: async function (request, h) {
             try {
                 const client = await Client.findById(request.params.id);
-                // console.log('client', client.worksites.items);
                 const clientWorksitesItem = [];
                 const promises = client.worksites.items.map(async (el) => {
                     const worksites = await Worksites.findById(el.WorksitesId);
@@ -115,7 +114,7 @@ module.exports = [
         handler: async function (request, h) {
             try {
                 await Client.findByIdAndUpdate(request.payload.id, request.payload);
-                return h.response({message: 'Data changed successfully!'}).code(200).takeover();
+                return h.response({message: 'Client changed successfully!'}).code(200).takeover();
             } catch (e){
                 console.log(e);
             }
@@ -133,7 +132,7 @@ module.exports = [
         handler: async function (request, h) {
             try {
                 await Client.deleteOne({_id: request.payload.id});
-                return h.response({message: 'Course deleted!'});
+                return h.response({message: 'Client deleted!'});
             } catch (e){
                 console.log(e);
             }
