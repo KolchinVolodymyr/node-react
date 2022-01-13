@@ -22,6 +22,9 @@ export const EquipmentAddPage = () => {
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
     }
+    const changeHandlerChecked = event => {
+        setData({...data, [event.target.name]: event.target.checked});
+    }
 
     useEffect(() => {
         message(error);
@@ -59,16 +62,18 @@ export const EquipmentAddPage = () => {
                     />
                 </label>
                 <label>Status</label>
-                <select
-                    className="browser-default"
-                    defaultValue='Choose your option'
-                    name="status"
-                    onChange={changeHandler}
-                >
-                    <option value='Choose your option' disabled>Choose your option</option>
-                    <option value='true'>true</option>
-                    <option value='false'>false</option>
-                </select>
+                <p>
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="status"
+                            className="filled-in"
+                            checked={data.status}
+                            onChange={changeHandlerChecked}
+                        />
+                        <span>Status</span>
+                    </label>
+                </p>
                 <button
                     className="btn btn-primary"
                     onClick={handleSubmitCreate}

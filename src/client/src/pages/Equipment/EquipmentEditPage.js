@@ -11,11 +11,18 @@ export const EquipmentEditPage = () => {
     const [data, setData] = useState({
         name: '', storageLocation: '', usageFee: '', status: ''
     });
+    const [count, setCount] = useState(0);
+
     const fetchClient = useCallback(async () => {
         try {
             const response = await request(`/equipment/${ID}/edit`, 'GET');
             setData(response.equipment);
-            // history.push(`/`);
+            console.log('response', response);
+            response.equipmentJob.map((el) => {
+                if(el.status === true) {
+                    setCount(count+1)
+                }
+            })
         } catch (e) {console.log(e)}
     }, [ID, request]);
 
@@ -38,6 +45,17 @@ export const EquipmentEditPage = () => {
     }
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
+    }
+    const changeHandlerChecked = event => {
+         if(event.target.checked === true) {
+             setData({...data, [event.target.name] : event.target.checked });
+         } else {
+             if(count === 0){
+                 setData({...data, [event.target.name] : event.target.checked });
+             } else {
+                 message('Equipment with active job cannot be deactivated');
+             }
+         }
     }
 
     return(
@@ -73,19 +91,18 @@ export const EquipmentEditPage = () => {
                             onChange={changeHandler}
                         />
                     </div>
-                    <div>
-                        <label>Status</label>
-                        <select
-                            className="browser-default"
-                            value={data.status}
-                            name="status"
-                            onChange={changeHandler}
-                        >
-                            <option value='Choose your option' disabled>Choose your option</option>
-                            <option value='true'>true</option>
-                            <option value='false'>false</option>
-                        </select>
-                    </div>
+                    <p>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="status"
+                                className="filled-in"
+                                checked={data.status}
+                                onChange={changeHandlerChecked}
+                            />
+                            <span>Status</span>
+                        </label>
+                    </p>
                     <button
                         className="btn btn-primary"
                         onClick={pressHandler}

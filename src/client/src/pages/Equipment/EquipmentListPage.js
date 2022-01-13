@@ -66,7 +66,7 @@ export const EquipmentListPage = () => {
                                     <li>Name:{item.id[1].name}</li>
                                     <li>Storage location: {item.id[1].storageLocation}</li>
                                     <li>Usage fee: {item.id[1].usageFee}</li>
-                                    <li>Status: {item.id[1].status}</li>
+                                    <li>Status: {item.id[1].status.toString()}</li>
                                 </ul>
                             </div>
                             <div className="card-action">
