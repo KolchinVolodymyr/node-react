@@ -20,7 +20,7 @@ export const ClientEditPage = () => {
             setData(response.client);
 
             const promises = response.clientWorksitesItem.map(async(el) => {
-                if(el.status == 'true') {
+                if(el.status === true) {
                     setCount(count+1)
                 }
             })
