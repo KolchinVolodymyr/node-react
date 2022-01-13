@@ -1,11 +1,13 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {useHistory, useParams} from "react-router-dom";
 import {useHttp} from "../../hooks/http.hook";
+import {useMessage} from "../../hooks/message.hook";
 
 export const EmployeesEditPage = () => {
     let history = useHistory();
     const ID = useParams().id;
-    const {request} = useHttp();
+    const {request, clearError, error} = useHttp();
+    const message = useMessage();;
     const [data, setData] = useState({
         name: '', address: '', phone: '', date_of_birth: '', salary: '', status: ''
     });
@@ -21,10 +23,15 @@ export const EmployeesEditPage = () => {
         fetchClient()
     }, []);
 
+    useEffect(() => {
+        message(error);
+        clearError();
+    }, [error, message, clearError]);
+
     const pressHandler = async ()  => {
         try {
             const response = await request(`/employees/${ID}/edit`, 'PUT', {...data, id: ID});
-            // message(response.message);
+            message(response.message);
             setData(response);
             history.push(`/employees/list`);
         } catch (e) {console.log(e)}
@@ -32,11 +39,23 @@ export const EmployeesEditPage = () => {
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
     }
+    const changeHandlerChecked = event => {
+        setData({...data, [event.target.name] : event.target.checked });
+        // if(event.target.checked === true) {
+        //     setData({...data, [event.target.name] : event.target.checked });
+        // } else {
+        //     if(count === 0){
+        //         setData({...data, [event.target.name] : event.target.checked });
+        //     } else {
+        //         message('Client with active worksites cannot be deactivated');
+        //     }
+        // }
+    }
 
     return(
         <div>
             <h1>
-                Client Edit Page
+                Employees Edit Page
             </h1>
             <div className="row">
                 <div>
@@ -85,19 +104,18 @@ export const EmployeesEditPage = () => {
                             onChange={changeHandler}
                         />
                     </div>
-                    <div>
-                        <label>Status</label>
-                        <select
-                            className="browser-default"
-                            value={data.status}
-                            name="status"
-                            onChange={changeHandler}
-                        >
-                            <option value='Choose your option' disabled>Choose your option</option>
-                            <option value='true'>true</option>
-                            <option value='false'>false</option>
-                        </select>
-                    </div>
+                    <p>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="status"
+                                className="filled-in"
+                                checked={data.status}
+                                onChange={changeHandlerChecked}
+                            />
+                            <span>Status</span>
+                        </label>
+                    </p>
                     <button
                         className="btn btn-primary"
                         onClick={pressHandler}

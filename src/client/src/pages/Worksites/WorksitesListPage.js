@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useHttp} from "../../hooks/http.hook";
-import {Link, useHistory} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {Loader} from "../../components/loader";
 import {useMessage} from "../../hooks/message.hook";
 

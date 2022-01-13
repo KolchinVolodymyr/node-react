@@ -1,31 +1,40 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useHttp} from "../../hooks/http.hook";
+import {useHistory} from "react-router-dom";
+import {useMessage} from "../../hooks/message.hook";
 
 export const EmployeesAddPage = () => {
-    const {request} = useHttp();
+    const history = useHistory();
+    const {request, loading, clearError, error} = useHttp();
+    const message = useMessage();;
     const [data, setData] = useState({
-        name: '', address: '', phone: '', salary: '', date_of_birth: '', status: ''
+        name: '', address: '', phone: '', salary: '', date_of_birth: '', status: false
     });
 
     const handleSubmitCreate = async () => {
         try {
             const response = await request('/employees', 'POST', {...data})
-            // message(response.message);
-            console.log('response', response);
-            // console.log('response.message', response.message);
-            // history.push(`/`);
+            message(response.message);
+            history.push(`/employees/list`);
         } catch (e) {console.log(e)}
     };
 
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
-        console.log('Employees data', data)
     }
+    const changeHandlerChecked = event => {
+        setData({...data, [event.target.name]: event.target.checked});
+    }
+
+    useEffect(() => {
+        message(error);
+        clearError();
+    }, [error, message, clearError]);
 
     return(
         <div>
             <h1>
-                Employees Page
+                Create Employee
             </h1>
             <form>
                 <label>
@@ -68,18 +77,25 @@ export const EmployeesAddPage = () => {
                         onChange={changeHandler}
                     />
                 </label>
-                <label>Status</label>
-                <select
-                    className="browser-default"
-                    defaultValue='Choose your option'
-                    name="status"
-                    onChange={changeHandler}
+                <p>
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="status"
+                            className="filled-in"
+                            checked={data.status}
+                            onChange={changeHandlerChecked}
+                        />
+                        <span>Status</span>
+                    </label>
+                </p>
+                <button
+                    className="btn btn-primary"
+                    onClick={handleSubmitCreate}
+                    disabled={loading}
                 >
-                    <option value='Choose your option' disabled>Choose your option</option>
-                    <option value='true'>true</option>
-                    <option value='false'>false</option>
-                </select>
-                <button onClick={handleSubmitCreate} type="primary">Create</button>
+                    Create
+                </button>
             </form>
         </div>
     )
