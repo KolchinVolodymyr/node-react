@@ -7,7 +7,7 @@ export const EmployeesEditPage = () => {
     let history = useHistory();
     const ID = useParams().id;
     const {request, clearError, error} = useHttp();
-    const message = useMessage();;
+    const message = useMessage();
     const [data, setData] = useState({
         name: '', address: '', phone: '', date_of_birth: '', salary: '', status: ''
     });

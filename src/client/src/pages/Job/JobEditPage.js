@@ -37,7 +37,7 @@ export const JobEditPage = () => {
     useEffect(() => {
         message(error);
         clearError();
-    }, [error, message, clearError])
+    }, [error, message, clearError]);
 
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});

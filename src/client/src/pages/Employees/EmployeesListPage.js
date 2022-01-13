@@ -11,8 +11,6 @@ export const EmployeesListPage = () => {
     const loadMessage = async () => {
         try {
             const response = await request('/employees/list', 'GET')
-            // message(response.message);
-            console.log('response', response)
             let newArr = [];
             Object.entries(response.employees).forEach((key, index)=> {
                 newArr.push({

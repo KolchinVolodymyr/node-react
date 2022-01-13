@@ -6,7 +6,7 @@ import {useMessage} from "../../hooks/message.hook";
 export const EmployeesAddPage = () => {
     const history = useHistory();
     const {request, loading, clearError, error} = useHttp();
-    const message = useMessage();;
+    const message = useMessage();
     const [data, setData] = useState({
         name: '', address: '', phone: '', salary: '', date_of_birth: '', status: false
     });

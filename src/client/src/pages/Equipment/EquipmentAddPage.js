@@ -1,25 +1,32 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useHttp} from "../../hooks/http.hook";
+import {useMessage} from "../../hooks/message.hook";
+import {useHistory} from "react-router-dom";
 
 export const EquipmentAddPage = () => {
-    const {request} = useHttp();
+    const history = useHistory();
+    const {request, loading, clearError, error} = useHttp();
+    const message = useMessage();
     const [data, setData] = useState({
-        name: '', storageLocation: '', usageFee: '', status: ''
+        name: '', storageLocation: '', usageFee: '', status: false
     });
 
     const handleSubmitCreate = async () => {
         try {
             const response = await request('/equipment', 'POST', {...data})
-            // message(response.message);
-            console.log('response', response);
-            // console.log('response.message', response.message);
-            // history.push(`/`);
+            message(response.message);
+            history.push(`/equipment/list`);
         } catch (e) {console.log(e)}
     };
 
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
     }
+
+    useEffect(() => {
+        message(error);
+        clearError();
+    }, [error, message, clearError]);
 
     return(
         <div>
@@ -62,7 +69,13 @@ export const EquipmentAddPage = () => {
                     <option value='true'>true</option>
                     <option value='false'>false</option>
                 </select>
-                <button onClick={handleSubmitCreate} type="primary">Create</button>
+                <button
+                    className="btn btn-primary"
+                    onClick={handleSubmitCreate}
+                    disabled={loading}
+                >
+                    Create
+                </button>
             </form>
         </div>
     )

@@ -1,11 +1,13 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {useHistory, useParams} from "react-router-dom";
 import {useHttp} from "../../hooks/http.hook";
+import {useMessage} from "../../hooks/message.hook";
 
 export const EquipmentEditPage = () => {
     let history = useHistory();
     const ID = useParams().id;
-    const {request} = useHttp();
+    const {request, clearError, error} = useHttp();
+    const message = useMessage();
     const [data, setData] = useState({
         name: '', storageLocation: '', usageFee: '', status: ''
     });
@@ -21,24 +23,27 @@ export const EquipmentEditPage = () => {
         fetchClient()
     }, []);
 
+    useEffect(() => {
+        message(error);
+        clearError();
+    }, [error, message, clearError])
+
     const pressHandler = async ()  => {
         try {
             const response = await request(`/equipment/${ID}/edit`, 'PUT', {...data, id: ID});
-            // message(response.message);
+            message(response.message);
             // setData(response);
-            console.log('response', response);
             history.push(`/equipment/list`);
         } catch (e) {console.log(e)}
     }
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
-        console.log('equipment data', data)
     }
 
     return(
         <div>
             <h1>
-                Client Edit Page
+                Equipment Edit Page
             </h1>
             <div className="row">
                 <div>

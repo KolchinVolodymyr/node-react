@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Link} from "react-router-dom";
 import {useHttp} from "../../hooks/http.hook";
+import {Loader} from "../../components/loader";
 
 export const EquipmentListPage = () => {
     const {request} = useHttp();
@@ -10,8 +11,6 @@ export const EquipmentListPage = () => {
     const loadMessage = async () => {
         try {
             const response = await request('/equipment/list', 'GET')
-            // message(response.message);
-            console.log('response', response)
             let newArr = [];
             Object.entries(response.equipment).forEach((key, index)=> {
                 newArr.push({
@@ -41,41 +40,48 @@ export const EquipmentListPage = () => {
     }
 
     if (!isLoaded) {
-        return <div>Загрузка...</div>;
-    } else {
-        return(
-            <div>
-                <h1>
-                    Equipment List Page
-                </h1>
-                <div className="row">
-                    {data.map(item => {
-                    return(
-                        <div className="col s12 m6" key={item.id[0]}>
-                            <div className="card blue-grey darken-1">
-                                <div className="card-content white-text">
-                                    <span className="card-title">{item.name}</span>
-                                    <ul>
-                                        <li>Name:{item.id[1].name}</li>
-                                        <li>Storage location: {item.id[1].storageLocation}</li>
-                                        <li>Usage fee: {item.id[1].usageFee}</li>
-                                        <li>Status: {item.id[1].status}</li>
-                                    </ul>
-                                </div>
-                                <div className="card-action">
-                                    <Link to={`/equipment/${item.id[1]._id}/edit`}>Edit</Link>
-                                    <button
-                                        className="btn btn-primary"
-                                        onClick={() => onRemove(item.id[1]._id)}
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            </div>
-                        </div>)
-                    })}
-                </div>
-            </div>
+        return <Loader/>
+    }
+    if (!data.length) {
+        return (
+            <p className="center">No employees yet !!! </p>
         )
     }
+    return(
+        <div>
+            <h1>
+                Equipment List Page
+            </h1>
+            <div className="collection">
+                Create a new equipment <Link to={'/equipment'} className="btn waves-effect waves-light">Add equipment</Link>
+            </div>
+            <div className="row">
+                {data.map(item => {
+                return(
+                    <div className="col s12 m6" key={item.id[0]}>
+                        <div className="card blue-grey darken-1">
+                            <div className="card-content white-text">
+                                <span className="card-title">{item.name}</span>
+                                <ul>
+                                    <li>Name:{item.id[1].name}</li>
+                                    <li>Storage location: {item.id[1].storageLocation}</li>
+                                    <li>Usage fee: {item.id[1].usageFee}</li>
+                                    <li>Status: {item.id[1].status}</li>
+                                </ul>
+                            </div>
+                            <div className="card-action">
+                                <Link to={`/equipment/${item.id[1]._id}/edit`}>Edit</Link>
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => onRemove(item.id[1]._id)}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>)
+                })}
+            </div>
+        </div>
+    )
 }
