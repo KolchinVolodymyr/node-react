@@ -20,6 +20,7 @@ import {EquipmentAddPage} from "./pages/Equipment/EquipmentAddPage";
 import {EquipmentListPage} from "./pages/Equipment/EquipmentListPage";
 import {EquipmentEditPage} from "./pages/Equipment/EquipmentEditPage";
 import {MonthlyEarningsReport} from "./pages/Reports/MonthlyEarningsReport";
+import {MonthlyExpenseReport} from "./pages/Reports/MonthlyExpenseReport";
 
 export const useRoutes = isAuthenticated => {
 
@@ -78,6 +79,9 @@ export const useRoutes = isAuthenticated => {
             </Route>
             <Route path="/MonthlyEarningsReport" exact>
                 <MonthlyEarningsReport />
+            </Route>
+            <Route path="/MonthlyExpenseReport" exact>
+                <MonthlyExpenseReport />
             </Route>
             <Route path="/login" exact>
                 <AuthPage />

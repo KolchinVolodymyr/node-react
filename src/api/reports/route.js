@@ -56,6 +56,28 @@ module.exports = [
                 console.log(e);
             }
         }
+    },
+    {
+        method: 'GET',
+        path: `/monthlyExpenseReport`,
+        options: {
+            auth: {
+                mode: 'try',
+                strategy: 'session60'
+            }
+        },
+        handler: async function (request, h) {
+            try {
+                const employees = await Employees.find();
+                const job = await Job.find();
+                job.map((el)=>{
+//                    console.log('el', el.employeesID)
+                })
+                return h.response({employees, job}).code(200).takeover();
+            } catch (e) {
+                console.log(e);
+            }
+        }
     }
 ]
 
