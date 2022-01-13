@@ -28,13 +28,6 @@ export const MonthlyExpenseReport = () => {
                 if (arrMonth.indexOf(el.endDate.slice(0, -3)) === -1) {
                     arrMonth.push(el.endDate.slice(0, -3));
                 }
-
-//                el.total = el.employees.salary;
-//                el.job.additionalEquipment.forEach(index => {
-//                    if (index.usageFee) {
-//                        el.total += Number(index.usageFee);
-//                    }
-//                })
             })
             setMonth(arrMonth);
             setIsLoaded(true);
@@ -52,34 +45,18 @@ export const MonthlyExpenseReport = () => {
         setChooseMonth(true);
         let EmployeeTotalTmp = 0;
         setCurrentMonth({...currentMonth, [event.target.name]: event.target.value});
-        console.log('CurrentMonth', currentMonth)
         let newData = [];
 
         data.forEach((a) => {
             if(event.target.value === a.startDate.slice(0, -3) || event.target.value === a.endDate.slice(0, -3)) {
-//                  console.log('employeesID', a.employeesID);
-//                  console.log('dataEmployees', dataEmployees);
-                  dataEmployees.map((el)=>{
+                dataEmployees.map((el)=>{
                     if(el._id === a.employeesID) {
                         newData.push(el);
-                        console.log('el', el.salary);
                         EmployeeTotalTmp += Number(el.salary);
                     }
-                  })
-                  setEmployeeTotal(EmployeeTotalTmp);
-//                  if(a.employeesID === dataEmployees._id) {
-//                    newData.push(dataEmployees);
-//                  }
-//                newData.push(a);
+                })
+                setEmployeeTotal(EmployeeTotalTmp);
                 setDataRender(newData);
-//                EmployeeTotal += Number(a.employees.salary);
-//                setEmployeeTotal(EmployeeTotal);
-//                a.job.additionalEquipment.forEach(index => {
-//                    if(index.usageFee) {
-//                        EquipmentTotal += Number(index.usageFee);
-//                    }
-//                })
-//                setEquipmentTotal(EquipmentTotal);
             }
         })
     }
