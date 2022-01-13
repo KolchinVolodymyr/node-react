@@ -13,15 +13,21 @@ export const WorksitesEditPage = () => {
     });
     const [currentClientID, setCurrentClientID] = useState(null);
     const [clients, setClients] = useState([]);
+    const [count, setCount] = useState(0);
 
     const fetchClient = useCallback(async () => {
         try {
             const response = await request(`/worksites/${ID}/edit`, 'GET');
             setData(response.worksites);
-            console.log('response.worksites', response.worksites);
             setClients(response.clientList);
             setCurrentClientID(response.worksites.clientID);
-            // history.push(`/`);
+
+            const promises = response.worksitesJob.map(async(el) => {
+                if(el.status === true) {
+                    setCount(count+1)
+                }
+            })
+            await Promise.all(promises);
         } catch (e) {console.log(e)}
     }, [ID, request]);
 
@@ -38,16 +44,15 @@ export const WorksitesEditPage = () => {
         setData({...data, [event.target.name]: event.target.value});
     }
     const changeHandlerChecked = event => {
-        setData({...data, [event.target.name] : event.target.checked });
-        // if(event.target.checked === true) {
-        //     setData({...data, [event.target.name] : event.target.checked });
-        // } else {
-        //     if(count === 0){
-        //         setData({...data, [event.target.name] : event.target.checked });
-        //     } else {
-        //         message('Client with active worksites cannot be deactivated');
-        //     }
-        // }
+         if(event.target.checked === true) {
+             setData({...data, [event.target.name] : event.target.checked });
+         } else {
+             if(count === 0){
+                 setData({...data, [event.target.name] : event.target.checked });
+             } else {
+                 message('Worksites with active job cannot be deactivated');
+             }
+         }
     }
 
     const PressHandler = async ()  => {

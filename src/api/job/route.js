@@ -93,7 +93,8 @@ module.exports = [
                 startDate: request.payload.startDate,
                 endDate: request.payload.endDate,
                 employeesID: request.payload.employeesID,
-                additionalEquipment: request.payload.additionalEquipment
+                additionalEquipment: request.payload.additionalEquipment,
+                status: request.payload.status
             });
             job.save();
             if (!job) {

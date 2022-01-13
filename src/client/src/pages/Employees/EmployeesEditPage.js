@@ -11,11 +11,17 @@ export const EmployeesEditPage = () => {
     const [data, setData] = useState({
         name: '', address: '', phone: '', date_of_birth: '', salary: '', status: ''
     });
+    const [count, setCount] = useState(0);
+
     const fetchClient = useCallback(async () => {
         try {
             const response = await request(`/employees/${ID}/edit`, 'GET');
             setData(response.employees);
-            // history.push(`/`);
+            response.employeesJob.map((el) => {
+                if(el.status === true) {
+                    setCount(count+1)
+                }
+            })
         } catch (e) {console.log(e)}
     }, [ID, request]);
 
@@ -40,16 +46,15 @@ export const EmployeesEditPage = () => {
         setData({...data, [event.target.name]: event.target.value});
     }
     const changeHandlerChecked = event => {
-        setData({...data, [event.target.name] : event.target.checked });
-        // if(event.target.checked === true) {
-        //     setData({...data, [event.target.name] : event.target.checked });
-        // } else {
-        //     if(count === 0){
-        //         setData({...data, [event.target.name] : event.target.checked });
-        //     } else {
-        //         message('Client with active worksites cannot be deactivated');
-        //     }
-        // }
+         if(event.target.checked === true) {
+             setData({...data, [event.target.name] : event.target.checked });
+         } else {
+             if(count === 0){
+                 setData({...data, [event.target.name] : event.target.checked });
+             } else {
+                 message('Employees with active job cannot be deactivated');
+             }
+         }
     }
 
     return(

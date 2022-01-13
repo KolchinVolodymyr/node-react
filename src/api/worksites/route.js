@@ -3,6 +3,7 @@
 const MODEL_NAME = 'worksites';
 const Worksites = require('./schema');
 const Client = require('../client/schema');
+const Job = require('../job/schema');
 const Joi = require("@hapi/joi");
 
 module.exports = [
@@ -74,7 +75,13 @@ module.exports = [
                 const worksites = await Worksites.findById(request.params.id);
                 const client = await Client.findById(worksites.clientID);
                 const clientList = await Client.find();
-                return h.response({worksites, client, clientList}).code(200).takeover();
+                const worksitesJob = [];
+                const promises = worksites.job.items.map(async (el) => {
+                    const job = await Job.findById(el.JobId);
+                    worksitesJob.push(job);
+                })
+                await  Promise.all(promises);
+                return h.response({worksites, client, clientList, worksitesJob}).code(200).takeover();
             } catch (e) {
                 console.log(e);
             }

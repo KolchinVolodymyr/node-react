@@ -10,7 +10,7 @@ export const JobEditPage = () => {
     const {request, loading, clearError, error} = useHttp();
     const message = useMessage();
     const [data, setData] = useState({
-        worksiteID: '', type: '', serviceFee: '', hazardousMaterials: '',additionalEquipment: '', startDate: '', endDate: '', employeesID: ''
+        worksiteID: '', type: '', serviceFee: '', hazardousMaterials: '',additionalEquipment: '', startDate: '', endDate: '', employeesID: '', status: ''
     });
     const [worksites, setWorksites] = useState([]);
     const [currentWorksiteID, setCurrentWorksiteID] = useState(null);
@@ -41,6 +41,17 @@ export const JobEditPage = () => {
 
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
+    }
+    const changeHandlerChecked = (event) => {
+//        if(event.target.checked === true) {
+            setData({...data, [event.target.name] : event.target.checked });
+//        } else {
+//            if(count === 0){
+//                setData({...data, [event.target.name] : event.target.checked });
+//            } else {
+//                message('Client with active worksites cannot be deactivated');
+//            }
+//        }
     }
 
     const PressHandler = async () => {
@@ -166,6 +177,18 @@ export const JobEditPage = () => {
                                 })}
                             </select>
                         </label>
+                        <p>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    name="status"
+                                    className="filled-in"
+                                    checked={data.status || ''}
+                                    onChange={changeHandlerChecked}
+                                />
+                                <span>Status</span>
+                            </label>
+                        </p>
                         <button
                             className="btn btn-primary"
                             onClick={PressHandler}
