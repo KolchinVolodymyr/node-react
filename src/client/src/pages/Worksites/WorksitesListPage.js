@@ -45,7 +45,7 @@ export const WorksitesListPage = () => {
     }
     if (!data.length) {
         return (
-            <p className="center">No client yet !!! </p>
+            <p className="center">No worksites yet !!! </p>
         )
     }
     return(

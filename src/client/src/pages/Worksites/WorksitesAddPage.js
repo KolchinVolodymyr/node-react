@@ -29,7 +29,7 @@ export const WorksitesAddPage = () => {
     useEffect(() => {
         message(error);
         clearError();
-    }, [error, message, clearError])
+    }, [error, message, clearError]);
 
     return(
         <div>

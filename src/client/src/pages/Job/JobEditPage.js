@@ -2,11 +2,13 @@ import React, {useState, useEffect, useCallback} from 'react';
 import {useParams, useHistory} from "react-router-dom";
 import {useHttp} from "../../hooks/http.hook";
 import Multiselect from 'multiselect-react-dropdown';
+import {useMessage} from "../../hooks/message.hook";
 
 export const JobEditPage = () => {
     let history = useHistory();
     const ID = useParams().id;
-    const {request} = useHttp();
+    const {request, loading, clearError, error} = useHttp();
+    const message = useMessage();
     const [data, setData] = useState({
         worksiteID: '', type: '', serviceFee: '', hazardousMaterials: '',additionalEquipment: '', startDate: '', endDate: '', employeesID: ''
     });
@@ -32,6 +34,11 @@ export const JobEditPage = () => {
         fetchClient()
     }, []);
 
+    useEffect(() => {
+        message(error);
+        clearError();
+    }, [error, message, clearError])
+
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
     }
@@ -39,7 +46,7 @@ export const JobEditPage = () => {
     const PressHandler = async () => {
         try {
             const response = await request(`/job/${ID}/edit`, 'PUT', {...data, id: ID, currentWorksiteID: currentWorksiteID, additionalEquipment: additionalEquipment});
-            // message(response.message);
+            message(response.message);
             setData(response);
             history.push(`/job/list`);
         } catch (e) {console.log(e)}
@@ -107,7 +114,6 @@ export const JobEditPage = () => {
                         </select>
                     </div>
                     <div className="input-field">
-
                         Service fee:
                             <input
                                 type="number"
@@ -144,26 +150,29 @@ export const JobEditPage = () => {
                                 onChange={changeHandler}
                             />
                         </label>
-                    <button
-                        className="btn btn-primary"
-                        onClick={PressHandler}
-                    >
-                        Save
-                    </button>
+                        <label>
+                            Employees:
+                            <select
+                                className="browser-default"
+                                value={data.employeesID || "Choose your option"}
+                                name="employeesID"
+                                onChange={changeHandler}
+                            >
+                                <option value='Choose your option' disabled>Choose your option</option>
+                                {employees.map(el =>{
+                                    return (
+                                        <option key={el._id} value={el._id}>{el.name}</option>
+                                    )
+                                })}
+                            </select>
+                        </label>
+                        <button
+                            className="btn btn-primary"
+                            onClick={PressHandler}
+                        >
+                            Save
+                        </button>
                 </div>
-                <select
-                    className="browser-default"
-                    value={data.employeesID || "Choose your option"}
-                    name="employeesID"
-                    onChange={changeHandler}
-                    >
-                    <option value='Choose your option' disabled>Choose your option</option>
-                    {employees.map(el =>{
-                        return (
-                            <option key={el._id} value={el._id}>{el.name}</option>
-                        )
-                    })}
-                </select>
             </div>
         </div>
     )

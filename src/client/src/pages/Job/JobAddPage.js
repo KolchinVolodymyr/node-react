@@ -1,13 +1,20 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {useHttp} from "../../hooks/http.hook";
+import {useHistory} from "react-router-dom";
+import {useMessage} from "../../hooks/message.hook";
+import Multiselect from "multiselect-react-dropdown";
 
 export const JobAddPage = () => {
-    const {request} = useHttp();
+    const history = useHistory();
+    const {request, loading, clearError, error} = useHttp();
+    const message = useMessage();
     const [data, setData] = useState({
         worksiteID: '', type: '', hazardousMaterials: '', serviceFee: '', startDate: '', endDate: '', employeesID: ''
     });
     const [worksites, setWorksites] = useState([]);
     const [employees, setEmployees] = useState([]);
+    const [equipment, setEquipment] = useState([]);
+    const [additionalEquipment, setAdditionalEquipment] = useState({});
 
     const fetchClient = useCallback(async () => {
         try {
@@ -15,7 +22,7 @@ export const JobAddPage = () => {
             setWorksites(response.worksites);
             setEmployees(response.employees);
             console.log('response', response);
-            // history.push(`/`);
+            setEquipment(response.equipment)
         } catch (e) {console.log(e)}
     }, [request]);
 
@@ -23,18 +30,28 @@ export const JobAddPage = () => {
         fetchClient()
     }, []);
 
+    useEffect(() => {
+        message(error);
+        clearError();
+    }, [error, message, clearError]);
+
     const handleSubmitCreate = async () => {
         try {
-            const response = await request('/job', 'POST', {...data})
-            // message(response.message);
-            console.log('response', response);
-            console.log('response.message', response.message);
-            // history.push(`/`);
+            const response = await request('/job', 'POST', {...data, additionalEquipment: additionalEquipment})
+            message(response.message);
+            history.push(`/job/list`);
         } catch (e) {console.log(e)}
     };
 
     const changeHandler = event => {
         setData({...data, [event.target.name]: event.target.value});
+    }
+    function onSelect(selectedList, selectedItem) {
+        setAdditionalEquipment(selectedList);
+    }
+
+    function onRemove(selectedList, removedItem) {
+        setAdditionalEquipment(selectedList);
     }
 
     return(
@@ -90,6 +107,16 @@ export const JobAddPage = () => {
                         onChange={changeHandler}
                     />
                 </label>
+                <div>
+                    Additional equipment
+                    <Multiselect
+                        options={equipment} // Options to display in the dropdown
+                        selectedValues={data.additionalEquipment} // Preselected value to persist in dropdown
+                        onSelect={onSelect} // Function will trigger on select event
+                        onRemove={onRemove} // Function will trigger on remove event
+                        displayValue="name" // Property name to display in the dropdown options
+                    />
+                </div>
                 <label>
                     Start date:
                     <input
@@ -106,23 +133,29 @@ export const JobAddPage = () => {
                         onChange={changeHandler}
                     />
                 </label>
-
-
-                <button onClick={handleSubmitCreate} type="primary">Create</button>
-
-                <select
-                    className="browser-default"
-                    value={data.employeesID || "Choose your option"}
-                    name="employeesID"
-                    onChange={changeHandler}
+                <label>
+                    Employees:
+                    <select
+                        className="browser-default"
+                        value={data.employeesID || "Choose your option"}
+                        name="employeesID"
+                        onChange={changeHandler}
+                    >
+                        <option value='Choose your option' disabled>Choose your option</option>
+                        {employees.map(el =>{
+                            return (
+                                <option key={el._id} value={el._id}>{el.name}</option>
+                            )
+                        })}
+                    </select>
+                </label>
+                <button
+                    className="btn btn-primary"
+                    onClick={handleSubmitCreate}
+                    disabled={loading}
                 >
-                    <option value='Choose your option' disabled>Choose your option</option>
-                    {employees.map(el =>{
-                        return (
-                            <option key={el._id} value={el._id}>{el.name}</option>
-                        )
-                    })}
-                </select>
+                    Create
+                </button>
             </form>
         </div>
     )

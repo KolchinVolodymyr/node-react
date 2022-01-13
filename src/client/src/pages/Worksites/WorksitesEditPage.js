@@ -128,19 +128,22 @@ export const WorksitesEditPage = () => {
                                 Save
                             </button>
                         </div>
-                    <select
-                        className="browser-default"
-                        value={data.clientID || "Choose your option"}
-                        name="clientID"
-                        onChange={changeHandler}
-                    >
-                        <option value='Choose your option' disabled>Choose your option</option>
-                        {clients.map(el =>{
-                            return (
-                                <option key={el._id} value={el._id}>{el.name}</option>
-                            )
-                        })}
-                    </select>
+                    <div>
+                        <label>Choose client</label>
+                        <select
+                            className="browser-default"
+                            value={data.clientID || "Choose your option"}
+                            name="clientID"
+                            onChange={changeHandler}
+                        >
+                            <option value='Choose your option' disabled>Choose your option</option>
+                            {clients.map(el =>{
+                                return (
+                                    <option key={el._id} value={el._id}>{el.name}</option>
+                                )
+                            })}
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>

@@ -20,7 +20,8 @@ module.exports = [
         handler: async function (request, h) {
             const worksites = await Worksites.find();
             const employees= await Employees.find();
-            return h.response({worksites, employees}).code(200).takeover();
+            const equipment= await Equipment.find();
+            return h.response({worksites, employees, equipment}).code(200).takeover();
         }
     },
     {
@@ -49,7 +50,6 @@ module.exports = [
         handler: async function (request, h) {
             try {
                 const job = await Job.findById(request.params.id);
-                // const worksite = await Worksites.findById(job.worksiteID);
                 const worksitesList = await Worksites.find();
                 const employees = await Employees.find();
                 const equipment = await Equipment.find();
@@ -67,23 +67,24 @@ module.exports = [
                 mode: 'try',
                 strategy: 'session60'
             },
-//            validate: {
-//                payload: Joi.object({
-//                    name: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
-//                    address: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
-//                    phone: Joi.number().integer().required().error(new Error('Enter the correct phone')),
-//                    contactPerson: Joi.number().integer().required().error(new Error('Enter the correct Contact Person'))
-//                }),
-//                options: {
-//                    allowUnknown: true,
-//                },
-//                failAction: (request, h, err) => {
-//                    return h.response({message: err.output.payload.message}).code(400).takeover();
-//                }
-//            },
+           validate: {
+               payload: Joi.object({
+                   worksiteID: Joi.string().min(3).required().error(new Error('Select from the dropdown list worksite')),
+                   type: Joi.string().min(3).required().error(new Error('Select from the dropdown list type')),
+                   hazardousMaterials: Joi.string().min(3).required().error(new Error('Select hazardous materials from the drop-down list')),
+                   serviceFee: Joi.number().integer().required().error(new Error('Enter the correct service fee')),
+                   startDate: Joi.string().min(3).required().error(new Error('Enter the correct start-date')),
+                   endDate: Joi.string().min(3).required().error(new Error('Enter the correct end-date')),
+               }),
+               options: {
+                   allowUnknown: true,
+               },
+               failAction: (request, h, err) => {
+                   return h.response({message: err.output.payload.message}).code(400).takeover();
+               }
+           },
         },
         handler: async function (request, h) {
-            console.log('request.payload', request.payload)
             const job = new Job({
                 worksiteID: request.payload.worksiteID,
                 type: request.payload.type,
@@ -91,13 +92,14 @@ module.exports = [
                 serviceFee: request.payload.serviceFee,
                 startDate: request.payload.startDate,
                 endDate: request.payload.endDate,
-                employeesID: request.payload.employeesID
+                employeesID: request.payload.employeesID,
+                additionalEquipment: request.payload.additionalEquipment
             });
             job.save();
             if (!job) {
                 return h.response({message: 'An error occured, please try again later!'})
             }
-            return h.response({message: 'Course successfully created !!!'}).code(201).takeover();
+            return h.response({message: 'Job successfully created !!!'}).code(201).takeover();
         }
     },
     {
@@ -108,20 +110,22 @@ module.exports = [
                 mode: 'try',
                 strategy: 'session60'
             },
-            // validate: {
-            //     payload: Joi.object({
-            //         name: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
-            //         address: Joi.string().min(3).required().error(new Error('Minimum name length 3 characters')),
-            //         phone: Joi.number().integer().required().error(new Error('Enter the correct phone')),
-            //         contactPerson: Joi.number().integer().required().error(new Error('Enter the correct Contact Person'))
-            //     }),
-            //     options: {
-            //         allowUnknown: true,
-            //     },
-            //     failAction: async (request, h, err) => {
-            //         return h.response({message: err.output.payload.message}).code(400).takeover();
-            //     }
-            // },
+            validate: {
+                payload: Joi.object({
+                    worksiteID: Joi.string().min(3).required().error(new Error('Select from the dropdown list worksite')),
+                    type: Joi.string().min(3).required().error(new Error('Select from the dropdown list type')),
+                    hazardousMaterials: Joi.string().min(3).required().error(new Error('Select hazardous materials from the drop-down list')),
+                    serviceFee: Joi.number().integer().required().error(new Error('Enter the correct service fee')),
+                    startDate: Joi.string().min(3).required().error(new Error('Enter the correct start-date')),
+                    endDate: Joi.string().min(3).required().error(new Error('Enter the correct end-date')),
+                }),
+                options: {
+                    allowUnknown: true,
+                },
+                failAction: async (request, h, err) => {
+                    return h.response({message: err.output.payload.message}).code(400).takeover();
+                }
+            },
         },
         handler: async function (request, h) {
             try {
@@ -135,7 +139,7 @@ module.exports = [
                 if(worksites !== null) {
                     await worksites.addToJobs(job);
                 }
-                return h.response({message: 'Data changed successfully!'}).code(200).takeover();
+                return h.response({message: 'Job changed successfully!'}).code(200).takeover();
             } catch (e){
                 console.log(e);
             }
