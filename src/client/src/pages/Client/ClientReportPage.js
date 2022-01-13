@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import {useParams} from "react-router-dom";
 import {useHttp} from "../../hooks/http.hook";
+import {Loader} from "../../components/loader";
 
 export const ClientReportPage = () => {
-//    let history = useHistory();
     const ID = useParams().id;
     const [data, setData] = useState([]);
     const [month, setMonth] = useState([]);
@@ -11,6 +11,7 @@ export const ClientReportPage = () => {
     const [employees, setEmployees] = useState([]);
     const [employeesRender, setEmployeesRender] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [chooseMonth, setChooseMonth] = useState(false);
 
     const {request} = useHttp();
     const loadMessage = async () => {
@@ -28,7 +29,9 @@ export const ClientReportPage = () => {
             response.employeesItem.forEach(el => {
                 el.total = el.employees.salary;
                 el.job.additionalEquipment.forEach(index => {
-                    el.total += Number(index.usageFee);
+                    if(index.usageFee) {
+                        el.total += Number(index.usageFee);
+                    }
                 })
             })
             setData(response.clientWorksitesItem);
@@ -45,6 +48,7 @@ export const ClientReportPage = () => {
     }, [])
 
     const changeHandler = event => {
+        setChooseMonth(true);
         setCurrentMonth({...currentMonth, [event.target.name]: event.target.value});
         let newEmployees = [];
 
@@ -57,69 +61,91 @@ export const ClientReportPage = () => {
     }
 
     if (!isLoaded) {
-        return <div>Загрузка...</div>;
-    } else {
-        return(
+        return <Loader/>
+    }
+    if (!chooseMonth) {
+        return (
             <div>
                 <h1>
                     Client Report Page
                 </h1>
-                <label>?</label>
+                <label>Choose your date and month</label>
                 <select
                     className="browser-default"
                     defaultValue={data.client || ""}
                     name="date"
                     onChange={changeHandler}
                 >
-                <option value='Choose your option' disabled>Choose your option</option>
-                {month.map((el, index) => {
-                    return (
-                        <option key={index} value={el}>{el}</option>
-                    )
-                })}
+                    <option value='Choose your option' disabled>Choose your option</option>
+                    {month.map((el, index) => {
+                        return (
+                            <option key={index} value={el}>{el}</option>
+                        )
+                    })}
                 </select>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Worksite name</th>
-                            <th>Employee name</th>
-                            <th>Equipment used</th>
-                            <th>Employee job cost</th>
-                            <th>Equipment cost</th>
-                            <th>Total cost</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {employeesRender.map((item, index) => {
-                            if(item.job.additionalEquipment.length == 0) {
-                                return( <tr key={index}>
-                                    <td>{item.worksites.name}</td>
-                                    <td>{item.employees.name}</td>
-                                    <td>--</td>
-                                    <td>{item.employees.salary}</td>
-                                    <td>0</td>
-                                    <td>{item.total}</td>
-                                </tr> )
-                            } else {
-                                return( <tr key={index}>
-                                    <td>{item.worksites.name}</td>
-                                    <td>{item.employees.name}</td>
-                                    <td>{item.job.additionalEquipment.map((el)=>{
-                                        return(<div key={el._id}>{el.name}</div>)
-                                    })}</td>
-                                    <td>{item.employees.salary}</td>
-                                    <td>{item.job.additionalEquipment.map((el)=>{
-                                        return(<div key={el._id}>{el.usageFee}</div>)
-                                    })}</td>
-                                    <td>{item.total}</td>
-                                </tr> )
-                            }
-                        })}
-                    </tbody>
-                </table>
-
             </div>
         )
     }
+    return(
+        <div>
+            <h1>
+                Client Report Page
+            </h1>
+            <label>Choose your date and month</label>
+            <select
+                className="browser-default"
+                defaultValue={data.client || ""}
+                name="date"
+                onChange={changeHandler}
+            >
+            <option value='Choose your option' disabled>Choose your option</option>
+            {month.map((el, index) => {
+                return (
+                    <option key={index} value={el}>{el}</option>
+                )
+            })}
+            </select>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Worksite name</th>
+                        <th>Employee name</th>
+                        <th>Equipment used</th>
+                        <th>Employee job cost</th>
+                        <th>Equipment cost</th>
+                        <th>Total cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {employeesRender.map((item, index) => {
+                        if(item.job.additionalEquipment.length == 0) {
+                            return( <tr key={index}>
+                                <td>{item.worksites.name}</td>
+                                <td>{item.employees.name}</td>
+                                <td>--</td>
+                                <td>{item.employees.salary}</td>
+                                <td>0</td>
+                                <td>{item.total}</td>
+                            </tr> )
+                        } else {
+                            return( <tr key={index}>
+                                <td>{item.worksites.name}</td>
+                                <td>{item.employees.name}</td>
+                                <td>{item.job.additionalEquipment.map((el)=>{
+                                    return(<div key={el._id}>{el.name}</div>)
+                                })}</td>
+                                <td>{item.employees.salary}</td>
+                                <td>{item.job.additionalEquipment.map((el)=>{
+                                    return(<div key={el._id}>{el.usageFee}</div>)
+                                })}</td>
+                                <td>{item.total}</td>
+                            </tr> )
+                        }
+                    })}
+                </tbody>
+            </table>
+
+        </div>
+    )
 }

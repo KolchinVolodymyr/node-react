@@ -29,28 +29,14 @@ export const  MonthlyEarningsReport = () => {
 
                 el.total = el.employees.salary;
                 el.job.additionalEquipment.forEach(index => {
-                    el.total += Number(index.usageFee);
+                    if (index.usageFee) {
+                        el.total += Number(index.usageFee);
+                    }
                 })
             })
             setMonth(arrMonth);
             setData(response.dataJob);
             setIsLoaded(true);
-
-            // data.forEach((a) => {
-            //     let EmployeeTotal = 0;
-            //     let EquipmentTotal = 0;
-            //     let newData = [];
-            //     if(month[0] === a.job.startDate.slice(0, -3)) {
-            //         newData.push(a);
-            //         setDataRender(newData);
-            //         EmployeeTotal += Number(a.employees.salary);
-            //         setEmployeeTotal(EmployeeTotal);
-            //         a.job.additionalEquipment.forEach(index => {
-            //             EquipmentTotal += Number(index.usageFee);
-            //         })
-            //         setEquipmentTotal(EquipmentTotal);
-            //     }
-            // })
         } catch (e) {console.log(e)}
     };
 
@@ -75,7 +61,9 @@ export const  MonthlyEarningsReport = () => {
                 EmployeeTotal += Number(a.employees.salary);
                 setEmployeeTotal(EmployeeTotal);
                 a.job.additionalEquipment.forEach(index => {
-                    EquipmentTotal += Number(index.usageFee);
+                    if(index.usageFee) {
+                        EquipmentTotal += Number(index.usageFee);
+                    }
                 })
                 setEquipmentTotal(EquipmentTotal);
             }
