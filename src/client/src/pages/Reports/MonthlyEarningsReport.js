@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useHttp} from "../../hooks/http.hook";
+import {Loader} from "../../components/loader";
 
 export const  MonthlyEarningsReport = () => {
     const {request} = useHttp();
@@ -10,20 +11,18 @@ export const  MonthlyEarningsReport = () => {
     const [month, setMonth] = useState([]);
     const [dataRender, setDataRender] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [chooseMonth, setChooseMonth] = useState(false);
 
     const loadMessage = async () => {
         try {
             const response = await request('/monthlyEarningsReport', 'GET')
-            // message(response.message);
-            console.log('response dataJob', response);
-
             let arrMonth = [];
             response.dataJob.forEach(el => {
-                if (arrMonth.indexOf(el.job.startDate.slice(0, -3)) == -1) {
+                if (arrMonth.indexOf(el.job.startDate.slice(0, -3)) === -1) {
                     arrMonth.push(el.job.startDate.slice(0, -3));
                     // arrMonth.push(el.job.endDate.slice(0, -3));
                 }
-                if (arrMonth.indexOf(el.job.endDate.slice(0, -3)) == -1) {
+                if (arrMonth.indexOf(el.job.endDate.slice(0, -3)) === -1) {
                     // arrMonth.push(el.job.startDate.slice(0, -3));
                     arrMonth.push(el.job.endDate.slice(0, -3));
                 }
@@ -35,7 +34,23 @@ export const  MonthlyEarningsReport = () => {
             })
             setMonth(arrMonth);
             setData(response.dataJob);
-            // history.push(`/`);
+            setIsLoaded(true);
+
+            // data.forEach((a) => {
+            //     let EmployeeTotal = 0;
+            //     let EquipmentTotal = 0;
+            //     let newData = [];
+            //     if(month[0] === a.job.startDate.slice(0, -3)) {
+            //         newData.push(a);
+            //         setDataRender(newData);
+            //         EmployeeTotal += Number(a.employees.salary);
+            //         setEmployeeTotal(EmployeeTotal);
+            //         a.job.additionalEquipment.forEach(index => {
+            //             EquipmentTotal += Number(index.usageFee);
+            //         })
+            //         setEquipmentTotal(EquipmentTotal);
+            //     }
+            // })
         } catch (e) {console.log(e)}
     };
 
@@ -47,6 +62,7 @@ export const  MonthlyEarningsReport = () => {
     }, [])
 
     const changeHandler = event => {
+        setChooseMonth(true);
         let EmployeeTotal = 0;
         let EquipmentTotal = 0;
         setCurrentMonth({...currentMonth, [event.target.name]: event.target.value});
@@ -65,13 +81,38 @@ export const  MonthlyEarningsReport = () => {
             }
         })
     }
-
+    if (!isLoaded) {
+        return <Loader/>
+    }
+    if (!chooseMonth) {
+        return (
+            <div>
+                <h1>
+                    Monthly Earnings Report Page
+                </h1>
+                <label>Choose your date and month</label>
+                <select
+                    className="browser-default"
+                    defaultValue={data.client || ""}
+                    name="date"
+                    onChange={changeHandler}
+                >
+                    <option value='Choose your option' disabled>Choose your option</option>
+                    {month.map((el, index) => {
+                        return (
+                            <option key={index} value={el}>{el}</option>
+                        )
+                    })}
+                </select>
+            </div>
+        )
+    }
     return(
         <div>
             <h1>
                 Monthly Earnings Report Page
             </h1>
-            <label>Date and month</label>
+            <label>Choose your date and month</label>
             <select
                 className="browser-default"
                 defaultValue={data.client || ""}
